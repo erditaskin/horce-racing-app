@@ -1,10 +1,14 @@
-import type { RouteRecordRaw } from 'vue-router';
-import { DASHBOARD_BASE_PATH } from './constants';
+import type { AppRoute } from '@/lib/types';
+import { DASHBOARD_ROUTE_DASHBOARD } from './constants';
 
-const routes: RouteRecordRaw[] = [
+const routes: AppRoute[] = [
   {
-    path: DASHBOARD_BASE_PATH + '/',
+    path: DASHBOARD_ROUTE_DASHBOARD,
     component: () => import('./views/DashBoard.vue'),
+    meta: {
+      title: 'Dashboard',
+      isDefault: true
+    }
   },
 ]
 

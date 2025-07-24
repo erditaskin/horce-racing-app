@@ -1,10 +1,13 @@
-import type { RouteRecordRaw } from 'vue-router';
-import { RACE_LIST_BASE_PATH } from './constants';
+import type { AppRoute } from '@/lib/types';
+import { RACE_ROUTE_RACE_BOARD } from './constants';
 
-const routes: RouteRecordRaw[] = [
+const routes: AppRoute[] = [
   {
-    path: RACE_LIST_BASE_PATH + '/board',
+    path: RACE_ROUTE_RACE_BOARD,
     component: () => import('./views/RaceBoard.vue'),
+    meta: {
+      title: 'Race Board'
+    }
   },
 ]
 

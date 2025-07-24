@@ -21,11 +21,16 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 .idea
+.cursorrules
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Project Development Context Files
+project-details.md
+tasks.md
 
 *.tsbuildinfo
 
