@@ -1,17 +1,10 @@
+import type { AppUser } from '@/lib/types/user'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
-export interface User {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  isAuthorized: boolean
-}
-
 export const useAuthStore = defineStore('auth', () => {
   // State
-  const user = ref<User | null>(null)
+  const user = ref<AppUser | null>(null)
   const token = ref<string | null>(null)
   const isLoading = ref(false)
 
@@ -31,12 +24,24 @@ export const useAuthStore = defineStore('auth', () => {
       await new Promise(resolve => setTimeout(resolve, 1000))
       
       // Mock successful login
-      const mockUser: User = {
+      const mockUser: AppUser = {
         id: '1',
         firstName: 'John',
         lastName: 'Doe',
         email,
-        isAuthorized: true
+        isAuthorized: true,
+        roleGroups: [
+          {
+            key: 'horse-operator',
+            roles: ['horse-list-view', 'horse-edit']
+          },
+          {
+            key: 'race-operator', 
+            roles: ['race-view', 'race-manage']
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
       
       user.value = mockUser

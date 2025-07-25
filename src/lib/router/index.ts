@@ -1,34 +1,43 @@
+import { authGuard } from '@/lib/guards/auth'
+import { roleGuard } from '@/lib/guards/role'
 import type { AppRoute } from '@/lib/types'
 import modules from '@/modules'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
+import { fetchReservedRoutes } from '../utils/route'
 
 // Collect all module routes
 const moduleRoutes = Object.values(modules).flatMap(module => module.routes) as AppRoute[]
 
-// Find the default route (marked with isDefault: true)
-const defaultRoute = moduleRoutes.find(route => route.meta?.isDefault)
+// Get reserved routes
+const reservedRoutes = fetchReservedRoutes(moduleRoutes)
 
-// Create routes array, placing default route at root path
+// Create routes array
 const routes: RouteRecordRaw[] = []
 
-if (defaultRoute) {
-  // Add default route at root path
-  routes.push({
-    path: '/',
-    redirect: defaultRoute.path
-  } as RouteRecordRaw)
-  
-  // Add all module routes
-  routes.push(...moduleRoutes as RouteRecordRaw[])
-} else {
-  // Fallback: add all module routes without default handling
-  routes.push(...moduleRoutes as RouteRecordRaw[])
-}
+// Add root path redirect to default route
+routes.push({
+  path: '/',
+  redirect: reservedRoutes.default
+} as RouteRecordRaw)
+
+// Add all module routes
+routes.push(...moduleRoutes as RouteRecordRaw[])
+
+// Add catch-all route for 404
+routes.push({
+  path: '/:pathMatch(.*)*',
+  redirect: reservedRoutes.notFound
+} as RouteRecordRaw)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 
+// Add global guards
+router.beforeEach(authGuard)
+router.beforeEach(roleGuard)
+
+export { reservedRoutes }
 export default router

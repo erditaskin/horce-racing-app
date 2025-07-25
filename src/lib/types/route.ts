@@ -8,6 +8,9 @@ export interface AppRouteMeta {
   layout?: 'base' | 'main' | 'none'
   isPublic?: boolean
   isDefault?: boolean
+  isLogin?: boolean
+  isUnauthorized?: boolean
+  isNotFound?: boolean
 }
 
 // Extended route record that includes our custom properties
