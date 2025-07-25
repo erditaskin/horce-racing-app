@@ -12,25 +12,13 @@
           <!-- Navigation -->
           <nav class="hidden md:flex space-x-8">
             <router-link
-              to="/dashboard"
+              v-for="item in navigationItems"
+              :key="item.path"
+              :to="item.path"
               class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary bg-primary/10"
+              active-class="text-primary bg-primary/10 active-nav-link"
             >
-              Dashboard
-            </router-link>
-            <router-link
-              to="/horse/list"
-              class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary bg-primary/10"
-            >
-              Horses
-            </router-link>
-            <router-link
-              to="/race/board"
-              class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary bg-primary/10"
-            >
-              Races
+              {{ item.label }}
             </router-link>
           </nav>
         </div>
@@ -99,9 +87,31 @@ const settingsStore = useSettingsStore()
 
 const isUserMenuOpen = ref(false)
 
+// Navigation items array - DRY approach
+const navigationItems = [
+  {
+    path: '/dashboard',
+    label: 'Dashboard',
+  },
+  {
+    path: '/horse/list',
+    label: 'Horses',
+  },
+  {
+    path: '/race/board',
+    label: 'Races',
+  },
+]
+
 const handleLogout = async () => {
-  await authStore.logout()
+  authStore.clearAuthState()
   router.push('/auth/login')
   isUserMenuOpen.value = false
 }
 </script>
+
+<style scoped>
+.active-nav-link {
+  background-color: hsl(from var(--primary) h s l / 0.1);
+}
+</style>

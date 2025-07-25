@@ -9,7 +9,7 @@
     :disabled="disabled"
     :class="[
       'block w-full px-4 py-3 border-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200',
-      'bg-background text-foreground placeholder-muted-foreground',
+      'bg-input text-foreground placeholder-muted-foreground',
       errorMessage
         ? 'border-destructive focus:ring-destructive focus:border-destructive'
         : 'border-border focus:ring-ring focus:border-ring hover:border-border/80',

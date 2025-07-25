@@ -39,9 +39,9 @@ export const DEFAULT_THEME_TOKENS = {
     [THEME_CSS_VARS.MUTED]: 'hsl(217.2 32.6% 17.5%)', // slate-800
     [THEME_CSS_VARS.MUTED_FOREGROUND]: 'hsl(215 20.2% 65.1%)', // slate-400
     [THEME_CSS_VARS.BORDER]: 'hsl(217.2 32.6% 17.5%)', // slate-800
-    [THEME_CSS_VARS.INPUT]: 'hsl(217.2 32.6% 17.5%)', // slate-800
+    [THEME_CSS_VARS.INPUT]: 'hsl(215 25% 27%)', // slate-700 - lighter for better input contrast
     [THEME_CSS_VARS.RING]: 'hsl(224.3 76.3% 94.1%)', // blue-400
-    [THEME_CSS_VARS.CARD]: 'hsl(222.2 84% 4.9%)', // slate-950
+    [THEME_CSS_VARS.CARD]: 'hsl(215 25% 27%)', // slate-700 - lighter for better input contrast
     [THEME_CSS_VARS.CARD_FOREGROUND]: 'hsl(210 40% 98%)', // slate-50
     [THEME_CSS_VARS.POPOVER]: 'hsl(222.2 84% 4.9%)', // slate-950
     [THEME_CSS_VARS.POPOVER_FOREGROUND]: 'hsl(210 40% 98%)', // slate-50

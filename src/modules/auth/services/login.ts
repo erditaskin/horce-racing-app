@@ -1,7 +1,8 @@
 import type { ApiResponse, AuthResponse, LoginRequest } from '@/lib/types/api'
 
 /**
- * Authentication service for login operations
+ * Authentication service for authentication flows
+ * Handles login, register, forgotPassword operations
  */
 export class AuthService {
   /**
@@ -102,21 +103,81 @@ export class AuthService {
   }
 
   /**
-   * Refresh authentication token
-   * Mock implementation that simulates token refresh
+   * Register new user
+   * Mock implementation that simulates API response
    */
-  static async refreshToken(): Promise<{ token: string; expiresAt: string }> {
+  static async register(credentials: {
+    email: string
+    password: string
+    firstName: string
+    lastName: string
+  }): Promise<AuthResponse> {
     try {
       // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      // Mock token refresh response
-      return {
-        token: 'mock-jwt-token-refreshed-' + Date.now(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      // Mock validation
+      if (
+        !credentials.email ||
+        !credentials.password ||
+        !credentials.firstName ||
+        !credentials.lastName
+      ) {
+        throw new Error('All fields are required')
       }
-    } catch {
-      throw new Error('Token refresh failed')
+
+      // Mock successful registration response
+      const mockResponse: ApiResponse<AuthResponse> = {
+        data: {
+          token: 'mock-jwt-token-' + Date.now(),
+          user: {
+            id: '2',
+            firstName: credentials.firstName,
+            lastName: credentials.lastName,
+            email: credentials.email,
+            roleGroups: [
+              {
+                key: 'user',
+                roles: ['basic-access'],
+              },
+            ],
+          },
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+        },
+        success: true,
+        message: 'Registration successful',
+        timestamp: new Date(),
+      }
+
+      // Simulate API call (in real app, this would be: return Api.post('/auth/register', credentials))
+      return mockResponse.data
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Registration failed'
+      throw new Error(errorMessage)
+    }
+  }
+
+  /**
+   * Forgot password
+   * Mock implementation that simulates API response
+   */
+  static async forgotPassword(email: string): Promise<{ message: string }> {
+    try {
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 800))
+
+      // Mock validation
+      if (!email) {
+        throw new Error('Email is required')
+      }
+
+      // Mock successful response
+      return {
+        message: 'Password reset email sent successfully',
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send reset email'
+      throw new Error(errorMessage)
     }
   }
 }

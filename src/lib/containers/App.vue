@@ -3,7 +3,7 @@ import { LAYOUT_BASE, LAYOUT_MAIN } from '@/lib/constants/layout'
 import Bootstrap from '@/lib/containers/bootstrap/Bootstrap.vue'
 import BaseLayout from '@/lib/layout/BaseLayout.vue'
 import MainLayout from '@/lib/layout/MainLayout/index.vue'
-import DialogProvider from '@/lib/providers/DialogProvider.vue'
+import ProviderWrapper from '@/lib/providers/ProviderWrapper.vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -25,7 +25,7 @@ const showBaseLayout = computed(() => currentLayout.value === LAYOUT_BASE)
 
 <template>
   <Bootstrap>
-    <DialogProvider>
+    <ProviderWrapper>
       <!-- Main Layout for authenticated pages -->
       <MainLayout v-if="showMainLayout">
         <RouterView />
@@ -40,7 +40,7 @@ const showBaseLayout = computed(() => currentLayout.value === LAYOUT_BASE)
       <div v-else class="min-h-screen bg-background text-foreground">
         <RouterView />
       </div>
-    </DialogProvider>
+    </ProviderWrapper>
   </Bootstrap>
 </template>
 

@@ -24,21 +24,27 @@ const variantClasses = computed(() => [
   props.size === 'sm' ? 'px-3 py-1.5 text-sm' : '',
   props.size === 'md' ? 'px-4 py-2 text-sm' : '',
   props.size === 'lg' ? 'px-6 py-3 text-base' : '',
+  // Default to md size if not specified
+  !props.size ? 'px-4 py-2 text-sm' : '',
   // Variant classes
   props.variant === 'primary'
-    ? 'bg-primary text-white hover:bg-primary/90 focus:ring-primary shadow-medium font-semibold'
+    ? 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-medium font-semibold'
     : '',
   props.variant === 'secondary'
-    ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-secondary shadow-sm font-medium'
+    ? 'bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-secondary-500 shadow-sm font-medium'
     : '',
   props.variant === 'danger'
-    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus:ring-destructive shadow-sm font-medium'
+    ? 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm font-medium'
     : '',
   props.variant === 'success'
-    ? 'bg-success text-success-foreground hover:bg-success/90 focus:ring-success shadow-sm font-medium'
+    ? 'bg-success-600 text-white hover:bg-success-700 focus:ring-success-500 shadow-sm font-medium'
     : '',
   props.variant === 'warning'
-    ? 'bg-warning text-warning-foreground hover:bg-warning/90 focus:ring-warning shadow-sm font-medium'
+    ? 'bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500 shadow-sm font-medium'
+    : '',
+  // Default variant if not specified
+  !props.variant
+    ? 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-medium font-semibold'
     : '',
 ])
 </script>

@@ -1,11 +1,7 @@
 <template>
-  <div class="w-full max-w-md mx-auto">
-    <div
-      class="bg-white dark:bg-gray-800 shadow-strong rounded-2xl p-8 border border-gray-100 dark:border-gray-700"
-    >
-      <h2 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
-        Login to Horse Racing
-      </h2>
+  <div class="w-full max-w-lg mx-auto">
+    <div class="bg-card text-card-foreground shadow-strong rounded-2xl p-8 border border-border">
+      <h2 class="text-3xl font-bold text-center mb-8">Login to Horse Racing</h2>
       <LoginForm @success="handleLoginSuccess" @error="handleLoginError" />
     </div>
   </div>
