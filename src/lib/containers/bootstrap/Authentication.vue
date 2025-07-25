@@ -35,7 +35,7 @@ const initializeAuthentication = async () => {
   } catch (error) {
     console.error('Authentication initialization failed:', error)
     // Clear any corrupted auth state
-    await authStore.logout()
+    authStore.clearAuthState()
   } finally {
     isInitializing.value = false
   }

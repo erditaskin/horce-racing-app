@@ -1,6 +1,6 @@
 <template>
   <header class="bg-card text-card-foreground shadow-sm border-b border-border">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <!-- Logo and Navigation -->
         <div class="flex items-center space-x-8">
@@ -36,7 +36,7 @@
           </button>
 
           <!-- User Menu -->
-          <div class="relative">
+          <div class="relative user-menu">
             <button
               @click="isUserMenuOpen = !isUserMenuOpen"
               class="flex items-center space-x-2 text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
@@ -49,7 +49,7 @@
             <!-- User Dropdown -->
             <div
               v-if="isUserMenuOpen"
-              class="absolute right-0 mt-2 w-48 bg-card text-card-foreground rounded-md shadow-lg py-1 z-50 border border-border"
+              class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 text-foreground rounded-md shadow-lg py-1 z-50 border border-border"
             >
               <div class="px-4 py-2 text-sm text-muted-foreground border-b border-border">
                 <div class="font-medium text-foreground">{{ authStore.fullName }}</div>
@@ -73,7 +73,7 @@
 import { useAuthStore } from '@/lib/stores/auth'
 import { useSettingsStore } from '@/lib/stores/settings'
 import { ChevronDown, Moon, Sun, User } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Component name for linting
@@ -108,6 +108,22 @@ const handleLogout = async () => {
   router.push('/auth/login')
   isUserMenuOpen.value = false
 }
+
+// Click outside handler
+const handleClickOutside = (event: Event) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.user-menu')) {
+    isUserMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <style scoped>

@@ -8,12 +8,16 @@
 }
 
 /* Force input colors to use our theme tokens */
-input, select, textarea {
+input,
+select,
+textarea {
   background-color: var(--input) !important;
   color: var(--foreground) !important;
 }
 
-input::placeholder, select::placeholder, textarea::placeholder {
+input::placeholder,
+select::placeholder,
+textarea::placeholder {
   color: var(--muted-foreground) !important;
 }
 

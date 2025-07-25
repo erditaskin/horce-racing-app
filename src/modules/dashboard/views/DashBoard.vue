@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Button from '@/lib/components/ui/Button.vue'
 import { useToast } from '@/lib/composables/useToast'
 
 defineOptions({
@@ -17,8 +16,10 @@ const testToasts = () => {
 </script>
 
 <template>
-  <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
-  <Button @click="testToasts" variant="primary"> Test Vue Toastification </Button>
+  <div class="px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
+    <Button @click="testToasts" variant="primary"> Test Vue Toastification </Button>
+  </div>
 </template>
 
 <style scoped></style>

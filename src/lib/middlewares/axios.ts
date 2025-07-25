@@ -64,7 +64,7 @@ export const setupAxiosInterceptors = () => {
       if (error.response?.status === 401) {
         // Unauthorized - clear token and redirect to login
         const authStore = useAuthStore()
-        authStore.logout()
+        authStore.clearAuthState()
         // Note: Router redirect will be handled by auth guard
       }
 
