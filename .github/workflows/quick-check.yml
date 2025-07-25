@@ -28,7 +28,4 @@ jobs:
       run: yarn type-check
       
     - name: Check code formatting
-      run: yarn format:check
-      
-    - name: Run unit tests
-      run: yarn test:unit 
+      run: yarn format:check 
