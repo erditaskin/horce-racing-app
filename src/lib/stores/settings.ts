@@ -1,13 +1,7 @@
+import { THEME_MODE_DARK, THEME_MODE_LIGHT, THEME_STORAGE_KEY, type ThemeMode } from '@/lib/constants/theme'
+import { applyThemeTokens } from '@/lib/theme/default'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
-
-export interface Theme {
-  mode: 'light' | 'dark'
-  primary: string
-  secondary: string
-  background: string
-  foreground: string
-}
 
 export interface UserPreferences {
   autoSave: boolean
@@ -17,14 +11,8 @@ export interface UserPreferences {
 }
 
 export const useSettingsStore = defineStore('settings', () => {
-  // State
-  const theme = ref<Theme>({
-    mode: 'light',
-    primary: '#2563eb',
-    secondary: '#dc2626',
-    background: '#ffffff',
-    foreground: '#0f172a'
-  })
+  // State - only manage mode, colors come from theme tokens
+  const themeMode = ref<ThemeMode>(THEME_MODE_LIGHT)
   
   const preferences = ref<UserPreferences>({
     autoSave: true,
@@ -36,7 +24,7 @@ export const useSettingsStore = defineStore('settings', () => {
   const isLoading = ref(false)
 
   // Getters
-  const isDarkMode = computed(() => theme.value.mode === 'dark')
+  const isDarkMode = computed(() => themeMode.value === THEME_MODE_DARK)
   const animationSpeedMultiplier = computed(() => {
     switch (preferences.value.animationSpeed) {
       case 'slow': return 1.5
@@ -47,76 +35,64 @@ export const useSettingsStore = defineStore('settings', () => {
 
   // Actions
   const toggleTheme = (): void => {
-    theme.value.mode = theme.value.mode === 'light' ? 'dark' : 'light'
-    updateThemeColors()
-    applyThemeToDOM()
+    themeMode.value = themeMode.value === THEME_MODE_LIGHT ? THEME_MODE_DARK : THEME_MODE_LIGHT
+    applyThemeTokens(themeMode.value)
   }
 
-  const setTheme = (mode: 'light' | 'dark'): void => {
-    theme.value.mode = mode
-    updateThemeColors()
-    applyThemeToDOM()
-  }
-
-  const updateThemeColors = (): void => {
-    if (theme.value.mode === 'dark') {
-      theme.value.background = '#0f172a'
-      theme.value.foreground = '#f8fafc'
-    } else {
-      theme.value.background = '#ffffff'
-      theme.value.foreground = '#0f172a'
-    }
-  }
-
-  const applyThemeToDOM = (): void => {
-    const root = document.documentElement
-    root.setAttribute('data-theme', theme.value.mode)
-    root.style.setProperty('--background', theme.value.background)
-    root.style.setProperty('--foreground', theme.value.foreground)
-    root.style.setProperty('--primary', theme.value.primary)
-    root.style.setProperty('--secondary', theme.value.secondary)
+  const setTheme = (mode: ThemeMode): void => {
+    themeMode.value = mode
+    applyThemeTokens(mode)
   }
 
   const updatePreferences = (newPreferences: Partial<UserPreferences>): void => {
     preferences.value = { ...preferences.value, ...newPreferences }
   }
 
-  const initializeSettings = (): void => {
-    // Load from localStorage
-    const storedTheme = localStorage.getItem('theme')
-    const storedPreferences = localStorage.getItem('preferences')
-    
-    if (storedTheme) {
-      try {
-        theme.value = { ...theme.value, ...JSON.parse(storedTheme) }
-      } catch (error) {
-        console.error('Failed to restore theme:', error)
+  const initializeSettings = async (): Promise<void> => {
+    try {
+      // Load from localStorage
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
+      const storedPreferences = localStorage.getItem('preferences')
+      
+      if (storedTheme) {
+        try {
+          const parsedTheme = JSON.parse(storedTheme)
+          // Use stored theme mode, fallback to light
+          themeMode.value = parsedTheme.mode ?? THEME_MODE_LIGHT
+        } catch (error) {
+          console.error('Failed to restore theme:', error)
+          themeMode.value = THEME_MODE_LIGHT
+        }
+      } else {
+        // No stored theme, default to light mode
+        themeMode.value = THEME_MODE_LIGHT
       }
-    }
-    
-    if (storedPreferences) {
-      try {
-        preferences.value = { ...preferences.value, ...JSON.parse(storedPreferences) }
-      } catch (error) {
-        console.error('Failed to restore preferences:', error)
+      
+      if (storedPreferences) {
+        try {
+          preferences.value = { ...preferences.value, ...JSON.parse(storedPreferences) }
+        } catch (error) {
+          console.error('Failed to restore preferences:', error)
+        }
       }
-    }
-    
-    // Apply theme to DOM
-    updateThemeColors()
-    applyThemeToDOM()
-    
-    // Detect system preference if no stored theme
-    if (!storedTheme) {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      setTheme(systemPrefersDark ? 'dark' : 'light')
+      
+      // Apply theme tokens to DOM
+      applyThemeTokens(themeMode.value)
+      
+      // Save current theme mode to localStorage to ensure sync
+      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ mode: themeMode.value }))
+      
+      console.log('Theme settings initialized successfully')
+    } catch (error) {
+      console.error('Failed to initialize theme settings:', error)
+      throw error
     }
   }
 
   // Watch for changes and save to localStorage
-  watch(theme, (newTheme) => {
-    localStorage.setItem('theme', JSON.stringify(newTheme))
-  }, { deep: true })
+  watch(themeMode, (newMode) => {
+    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ mode: newMode }))
+  })
 
   watch(preferences, (newPreferences) => {
     localStorage.setItem('preferences', JSON.stringify(newPreferences))
@@ -124,7 +100,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   return {
     // State
-    theme,
+    themeMode,
     preferences,
     isLoading,
     

@@ -2,31 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom CSS Variables for Theming */
+/* Theme CSS Custom Properties - will be set by JavaScript */
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --primary: #2563eb;
-  --secondary: #dc2626;
-  --success: #16a34a;
-  --warning: #ca8a04;
-  --error: #dc2626;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --ring: #3b82f6;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 84% 4.9%);
+  --primary: hsl(221.2 83.2% 53.3%);
+  --secondary: hsl(210 40% 96%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --border: hsl(214.3 31.8% 91.4%);
+  --input: hsl(214.3 31.8% 91.4%);
+  --ring: hsl(221.2 83.2% 53.3%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 84% 4.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222.2 84% 4.9%);
+  --tooltip: hsl(222.2 84% 4.9%);
+  --tooltip-foreground: hsl(210 40% 98%);
+  --accent: hsl(210 40% 96%);
+  --accent-foreground: hsl(222.2 47.4% 11.2%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --success: hsl(142.1 76.2% 36.3%);
+  --success-foreground: hsl(210 40% 98%);
+  --warning: hsl(38 92% 50%);
+  --warning-foreground: hsl(222.2 84% 4.9%);
 }
 
+/* Dark theme overrides */
 [data-theme="dark"] {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --primary: #3b82f6;
-  --secondary: #f87171;
-  --success: #22c55e;
-  --warning: #fbbf24;
-  --error: #f87171;
-  --muted: #94a3b8;
-  --border: #334155;
-  --ring: #60a5fa;
+  --background: hsl(222.2 84% 4.9%);
+  --foreground: hsl(210 40% 98%);
+  --primary: hsl(217.2 91.2% 59.8%);
+  --secondary: hsl(217.2 32.6% 17.5%);
+  --muted: hsl(217.2 32.6% 17.5%);
+  --muted-foreground: hsl(215 20.2% 65.1%);
+  --border: hsl(217.2 32.6% 17.5%);
+  --input: hsl(217.2 32.6% 17.5%);
+  --ring: hsl(224.3 76.3% 94.1%);
+  --card: hsl(222.2 84% 4.9%);
+  --card-foreground: hsl(210 40% 98%);
+  --popover: hsl(222.2 84% 4.9%);
+  --popover-foreground: hsl(210 40% 98%);
+  --tooltip: hsl(210 40% 98%);
+  --tooltip-foreground: hsl(222.2 84% 4.9%);
+  --accent: hsl(217.2 32.6% 17.5%);
+  --accent-foreground: hsl(210 40% 98%);
+  --destructive: hsl(0 62.8% 30.6%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --success: hsl(142.1 70.6% 45.3%);
+  --success-foreground: hsl(222.2 84% 4.9%);
+  --warning: hsl(48 96% 53%);
+  --warning-foreground: hsl(222.2 84% 4.9%);
 }
 
 /* Base Styles */
@@ -39,7 +66,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Roboto Condensed', system-ui, sans-serif;
   background-color: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -221,4 +248,73 @@ body {
   .toast {
     min-width: auto;
   }
+}
+
+/* Utility classes using theme tokens */
+.bg-background {
+  background-color: var(--background);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-secondary {
+  background-color: var(--secondary);
+}
+
+.text-secondary {
+  color: var(--secondary);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.bg-card {
+  background-color: var(--card);
+}
+
+.text-card-foreground {
+  color: var(--card-foreground);
+}
+
+.bg-muted {
+  background-color: var(--muted);
+}
+
+.text-muted-foreground {
+  color: var(--muted-foreground);
+}
+
+.bg-destructive {
+  background-color: var(--destructive);
+}
+
+.text-destructive-foreground {
+  color: var(--destructive-foreground);
+}
+
+.bg-success {
+  background-color: var(--success);
+}
+
+.text-success-foreground {
+  color: var(--success-foreground);
+}
+
+.bg-warning {
+  background-color: var(--warning);
+}
+
+.text-warning-foreground {
+  color: var(--warning-foreground);
 }

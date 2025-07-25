@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+  <div class="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
     <div class="flex min-h-screen items-center justify-center p-4">
       <div class="w-full max-w-md">
         <slot />

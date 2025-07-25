@@ -118,7 +118,7 @@ onUnmounted(() => {
           <div
             ref="modalElement"
             :class="[
-              'relative w-full bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all',
+              'relative w-full bg-card text-card-foreground rounded-lg shadow-xl transform transition-all',
               sizeClasses
             ]"
             role="dialog"
@@ -126,11 +126,11 @@ onUnmounted(() => {
             aria-labelledby="modal-title"
           >
             <!-- Header -->
-            <div v-if="title || showCloseButton" class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+            <div v-if="title || showCloseButton" class="flex items-center justify-between p-6 border-b border-border">
               <h3
                 v-if="title"
                 id="modal-title"
-                class="text-lg font-medium text-gray-900 dark:text-white"
+                class="text-lg font-medium text-foreground"
               >
                 {{ title }}
               </h3>
@@ -154,7 +154,7 @@ onUnmounted(() => {
             </div>
             
             <!-- Footer -->
-            <div v-if="$slots.footer" class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
+            <div v-if="$slots.footer" class="flex items-center justify-end space-x-3 p-6 border-t border-border">
               <slot name="footer" />
             </div>
           </div>

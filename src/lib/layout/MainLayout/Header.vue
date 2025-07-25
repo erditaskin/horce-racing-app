@@ -1,12 +1,12 @@
 <template>
-  <header class="bg-white dark:bg-gray-900 shadow-sm border-b border-gray-200 dark:border-gray-700">
+  <header class="bg-card text-card-foreground shadow-sm border-b border-border">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <!-- Logo and Navigation -->
         <div class="flex items-center space-x-8">
           <!-- Logo -->
           <div class="flex-shrink-0">
-            <h1 class="text-xl font-bold text-primary-600 dark:text-primary-400">
+            <h1 class="text-xl font-bold text-primary">
               🏇 Horse Racing
             </h1>
           </div>
@@ -15,22 +15,22 @@
           <nav class="hidden md:flex space-x-8">
             <router-link
               to="/dashboard"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20"
+              class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              active-class="text-primary bg-primary/10"
             >
               Dashboard
             </router-link>
             <router-link
               to="/horse/list"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20"
+              class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              active-class="text-primary bg-primary/10"
             >
               Horses
             </router-link>
             <router-link
               to="/race/board"
-              class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              active-class="text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20"
+              class="text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              active-class="text-primary bg-primary/10"
             >
               Races
             </router-link>
@@ -42,7 +42,7 @@
           <!-- Theme Toggle -->
           <button
             @click="settingsStore.toggleTheme()"
-            class="p-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-md transition-colors"
+            class="p-2 text-muted-foreground hover:text-primary rounded-md transition-colors"
             :title="settingsStore.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
           >
             <Sun v-if="settingsStore.isDarkMode" class="w-5 h-5" />
@@ -53,7 +53,7 @@
           <div class="relative">
             <button
               @click="isUserMenuOpen = !isUserMenuOpen"
-              class="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              class="flex items-center space-x-2 text-muted-foreground hover:text-primary px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               <User class="w-5 h-5" />
               <span>{{ authStore.fullName }}</span>
@@ -63,15 +63,15 @@
             <!-- User Dropdown -->
             <div
               v-if="isUserMenuOpen"
-              class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700"
+              class="absolute right-0 mt-2 w-48 bg-card text-card-foreground rounded-md shadow-lg py-1 z-50 border border-border"
             >
-              <div class="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
-                <div class="font-medium">{{ authStore.fullName }}</div>
-                <div class="text-gray-500 dark:text-gray-400">{{ authStore.user?.email }}</div>
+              <div class="px-4 py-2 text-sm text-muted-foreground border-b border-border">
+                <div class="font-medium text-foreground">{{ authStore.fullName }}</div>
+                <div class="text-muted-foreground">{{ authStore.user?.email }}</div>
               </div>
               <button
                 @click="handleLogout"
-                class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                class="w-full text-left px-4 py-2 text-sm text-muted-foreground hover:bg-muted transition-colors"
               >
                 Sign out
               </button>

@@ -34,22 +34,22 @@ const emit = defineEmits<{
 const typeConfig = {
   info: {
     icon: Info,
-    iconClass: 'text-blue-500',
+    iconClass: 'text-primary',
     confirmVariant: 'primary' as const
   },
   warning: {
     icon: AlertTriangle,
-    iconClass: 'text-yellow-500',
+    iconClass: 'text-warning',
     confirmVariant: 'warning' as const
   },
   error: {
     icon: XCircle,
-    iconClass: 'text-red-500',
+    iconClass: 'text-destructive',
     confirmVariant: 'danger' as const
   },
   success: {
     icon: CheckCircle,
-    iconClass: 'text-green-500',
+    iconClass: 'text-success',
     confirmVariant: 'success' as const
   }
 }
@@ -91,21 +91,21 @@ const handleClose = () => {
         <!-- Confirm Dialog -->
         <div class="flex min-h-full items-center justify-center p-4">
           <div
-            class="relative w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-xl transform transition-all"
+            class="relative w-full max-w-md bg-card text-card-foreground rounded-lg shadow-xl transform transition-all"
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
             @click.stop
           >
             <!-- Header -->
-            <div class="flex items-center p-6 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center p-6 border-b border-border">
               <div class="flex-shrink-0">
                 <IconComponent :class="['w-6 h-6', config.iconClass]" />
               </div>
               <div class="ml-3">
                 <h3
                   id="confirm-title"
-                  class="text-lg font-medium text-gray-900 dark:text-white"
+                  class="text-lg font-medium text-foreground"
                 >
                   {{ title }}
                 </h3>
@@ -114,13 +114,13 @@ const handleClose = () => {
             
             <!-- Content -->
             <div class="p-6">
-              <p class="text-sm text-gray-500 dark:text-gray-400">
+              <p class="text-sm text-muted-foreground">
                 {{ message }}
               </p>
             </div>
             
             <!-- Footer -->
-            <div class="flex items-center justify-end space-x-3 p-6 border-t border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-end space-x-3 p-6 border-t border-border">
               <Button
                 v-if="showCancel"
                 variant="secondary"

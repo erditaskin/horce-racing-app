@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { LAYOUT_BASE, LAYOUT_MAIN } from '@/lib/constants/layout'
+import Bootstrap from '@/lib/containers/bootstrap/Bootstrap.vue'
 import BaseLayout from '@/lib/layout/BaseLayout.vue'
 import MainLayout from '@/lib/layout/MainLayout/index.vue'
 import DialogProvider from '@/lib/providers/DialogProvider.vue'
@@ -23,22 +24,24 @@ const showBaseLayout = computed(() => currentLayout.value === LAYOUT_BASE)
 </script>
 
 <template>
-  <DialogProvider>
-    <!-- Main Layout for authenticated pages -->
-    <MainLayout v-if="showMainLayout">
-      <RouterView />
-    </MainLayout>
-    
-    <!-- Base Layout for public/auth pages -->
-    <BaseLayout v-else-if="showBaseLayout">
-      <RouterView />
-    </BaseLayout>
-    
-    <!-- Fallback for no layout -->
-    <div v-else class="min-h-screen bg-background text-foreground">
-      <RouterView />
-    </div>
-  </DialogProvider>
+  <Bootstrap>
+    <DialogProvider>
+      <!-- Main Layout for authenticated pages -->
+      <MainLayout v-if="showMainLayout">
+        <RouterView />
+      </MainLayout>
+      
+      <!-- Base Layout for public/auth pages -->
+      <BaseLayout v-else-if="showBaseLayout">
+        <RouterView />
+      </BaseLayout>
+      
+      <!-- Fallback for no layout -->
+      <div v-else class="min-h-screen bg-background text-foreground">
+        <RouterView />
+      </div>
+    </DialogProvider>
+  </Bootstrap>
 </template>
 
 <style scoped>

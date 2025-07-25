@@ -1,4 +1,5 @@
 import type { AppUser } from '@/lib/types/user'
+import { AuthService } from '@/modules/auth/services/login'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
@@ -16,40 +17,32 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   // Actions
-          const login = async (email: string, password: string): Promise<void> => {
+  const login = async (email: string, password: string): Promise<void> => {
     isLoading.value = true
     try {
-      console.log('Login called', password)
-      // Mock API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Use AuthService instead of direct mock
+      const authResponse = await AuthService.login({ email, password })
       
-      // Mock successful login
-      const mockUser: AppUser = {
-        id: '1',
-        firstName: 'John',
-        lastName: 'Doe',
-        email,
+      // Convert AuthResponse to AppUser
+      const appUser: AppUser = {
+        id: authResponse.user.id,
+        firstName: authResponse.user.firstName,
+        lastName: authResponse.user.lastName,
+        email: authResponse.user.email,
         isAuthorized: true,
-        roleGroups: [
-          {
-            key: 'horse-operator',
-            roles: ['horse-list-view', 'horse-edit']
-          },
-          {
-            key: 'race-operator', 
-            roles: ['race-view', 'race-manage']
-          }
-        ],
+        roleGroups: authResponse.user.roleGroups,
         createdAt: new Date(),
         updatedAt: new Date()
       }
       
-      user.value = mockUser
-      token.value = 'mock-jwt-token-' + Date.now()
+      // Update store state
+      user.value = appUser
+      token.value = authResponse.token
       
       // Store in localStorage
-      localStorage.setItem('auth_token', token.value)
-      localStorage.setItem('user', JSON.stringify(mockUser))
+      localStorage.setItem('auth_token', authResponse.token)
+      localStorage.setItem('user', JSON.stringify(appUser))
+      localStorage.setItem('token_expires_at', authResponse.expiresAt)
     } catch (error) {
       console.error('Login failed:', error)
       throw error
@@ -58,24 +51,79 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const logout = (): void => {
-    user.value = null
-    token.value = null
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('user')
+  const logout = async (): Promise<void> => {
+    try {
+      // Call logout service
+      await AuthService.logout()
+    } catch (error) {
+      console.error('Logout service error:', error)
+      // Continue with local logout even if service fails
+    } finally {
+      // Clear local state
+      user.value = null
+      token.value = null
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user')
+      localStorage.removeItem('token_expires_at')
+    }
   }
 
-  const initializeAuth = (): void => {
+  const refreshToken = async (): Promise<void> => {
+    try {
+      const refreshResponse = await AuthService.refreshToken()
+      token.value = refreshResponse.token
+      localStorage.setItem('auth_token', refreshResponse.token)
+      localStorage.setItem('token_expires_at', refreshResponse.expiresAt)
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+      // If refresh fails, logout user
+      await logout()
+      throw error
+    }
+  }
+
+  const initializeAuth = async (): Promise<void> => {
     const storedToken = localStorage.getItem('auth_token')
-    const storedUser = localStorage.getItem('user')
+    const tokenExpiresAt = localStorage.getItem('token_expires_at')
     
-    if (storedToken && storedUser) {
+    if (storedToken && tokenExpiresAt) {
       try {
-        token.value = storedToken
-        user.value = JSON.parse(storedUser)
+        // Check if token is expired
+        const expiresAt = new Date(tokenExpiresAt)
+        if (expiresAt > new Date()) {
+          // Token is still valid, set it first
+          token.value = storedToken
+          
+          // Fetch current user from /auth/me endpoint
+          const currentUser = await AuthService.getCurrentUser()
+          
+          // Convert to AppUser
+          const appUser: AppUser = {
+            id: currentUser.id,
+            firstName: currentUser.firstName,
+            lastName: currentUser.lastName,
+            email: currentUser.email,
+            isAuthorized: true,
+            roleGroups: currentUser.roleGroups,
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+          
+          // Update store state
+          user.value = appUser
+          
+          // Update localStorage with fresh user data
+          localStorage.setItem('user', JSON.stringify(appUser))
+          
+          console.log('Authentication initialized successfully')
+        } else {
+          // Token expired, clear storage
+          console.log('Token expired, clearing auth state')
+          await logout()
+        }
       } catch (error) {
-        console.error('Failed to restore auth state:', error)
-        logout()
+        console.error('Failed to initialize auth state:', error)
+        await logout()
       }
     }
   }
@@ -93,6 +141,7 @@ export const useAuthStore = defineStore('auth', () => {
     // Actions
     login,
     logout,
+    refreshToken,
     initializeAuth
   }
 })
