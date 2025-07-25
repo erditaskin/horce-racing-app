@@ -5,7 +5,6 @@ const routes: AppRoute[] = [
   {
     path: HORSE_ROUTE_HORSE_LIST,
     component: () => import('./views/HorseList.vue'),
-    roles: [HORSE_ROLE_HORSE_LIST_PAGE_VIEW],
     meta: {
       title: 'Horse List',
       permissions: [HORSE_ROLE_HORSE_LIST_PAGE_VIEW]

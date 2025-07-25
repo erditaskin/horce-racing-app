@@ -18,7 +18,6 @@ export interface AppRoute extends Omit<RouteRecordRaw, 'meta'> {
   meta?: AppRouteMeta
   layout?: 'base' | 'main' | 'none'
   isPublic?: boolean
-  roles?: string[]
 }
 
 // Route guard result
