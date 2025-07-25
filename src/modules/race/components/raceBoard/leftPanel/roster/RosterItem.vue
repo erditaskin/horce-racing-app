@@ -22,8 +22,8 @@ defineProps<Props>()
 .horse-row {
   display: grid;
   grid-template-columns: 1fr 80px 60px;
-  gap: 12px;
-  padding: 8px 12px;
+  gap: 0;
+  padding: 8px;
   border-bottom: 1px solid var(--border);
   font-size: 14px;
 }
@@ -35,6 +35,10 @@ defineProps<Props>()
 .col-name {
   font-weight: 500;
   color: var(--foreground);
+  padding-left: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .col-condition {

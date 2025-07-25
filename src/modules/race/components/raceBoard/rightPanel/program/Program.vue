@@ -10,8 +10,10 @@
           v-for="(race, index) in raceDay.races"
           :key="race.id"
           :race="race"
+          :race-index="index"
           :is-selected="index === selectedRaceIndex"
           :is-current="index === raceDay.currentRaceIndex"
+          @select-race="$emit('selectRace', $event)"
         />
       </div>
 
@@ -36,6 +38,10 @@ interface Props {
 }
 
 defineProps<Props>()
+
+defineEmits<{
+  selectRace: [index: number]
+}>()
 </script>
 
 <style scoped>

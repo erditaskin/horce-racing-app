@@ -20,6 +20,7 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
   const horses = ref<Horse[]>([])
   const raceDay = ref<RaceDay | null>(null)
   const selectedRaceIndex = ref(0)
+  const selectedRoundIndex = ref(0)
   const selectedDate = ref(getInitialDate())
   const isLoading = ref(false)
   const isRunning = ref(false)
@@ -55,17 +56,29 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
     return raceDay.value.races[selectedRaceIndex.value] ?? null
   })
 
+  // Auto-track current round from race day state
+  const currentRoundIndex = computed(() => {
+    if (!raceDay.value) return 0
+    return raceDay.value.currentRoundIndex
+  })
+
   const roundOptions = computed((): AppOption[] => {
     if (!raceDay.value?.races.length) return []
-    return raceDay.value.races.map((race, index) => ({
-      value: index,
-      label: `Race ${race.raceNumber} - ${race.distance}m`,
+    const race = raceDay.value.races[selectedRaceIndex.value]
+    if (!race) return []
+    return race.rounds.map((round, idx) => ({
+      value: idx,
+      label: `Round ${round.roundNumber} - ${round.distance}m`,
     }))
   })
 
-  const canStart = computed(
-    () => !!raceDay.value && raceDay.value.status === 'generated' && !isLoading.value,
-  )
+  const canStart = computed(() => {
+    const hasRaceDay = !!raceDay.value
+    const isGenerated = raceDay.value?.status === 'generated'
+    const notLoading = !isLoading.value
+
+    return hasRaceDay && isGenerated && notLoading
+  })
 
   // Actions
   /**
@@ -90,6 +103,7 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
    */
   const generateRaceDay = async (options?: RaceDayGenerationOptions) => {
     try {
+      console.log('generateRaceDay called')
       isLoading.value = true
       error.value = null
 
@@ -98,6 +112,8 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
         selectedDate.value,
         options,
       )
+      console.log('Race day generated:', raceDay.value)
+      console.log('Race day status:', raceDay.value?.status)
       selectedRaceIndex.value = 0
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to generate race day'
@@ -114,72 +130,67 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
     if (!raceDay.value) return
 
     if (isRunning.value) {
+      console.log('Race is already running, pausing...')
       // Pause
       isRunning.value = false
       return
     }
 
     try {
+      console.log('Starting race execution...')
       isLoading.value = true
       isRunning.value = true
       error.value = null
 
-      // Execute all races sequentially
-      for (let i = 0; i < raceDay.value!.races.length; i++) {
-        if (!isRunning.value) break // Check if paused
-
-        raceDay.value = await ProgramService.executeRace(raceDay.value!, i, {
-          animationSpeed: 50, // Faster animation
-          autoStart: i < raceDay.value!.races.length - 1,
-        })
-
-        // Update selected race to show current progress
-        selectedRaceIndex.value = i
-
-        // Small delay between races
-        if (i < raceDay.value!.races.length - 1) {
-          await new Promise((resolve) => setTimeout(resolve, 500))
-        }
-      }
+      // Execute only the selected race
+      console.log(`Executing selected race ${selectedRaceIndex.value + 1}`)
+      raceDay.value = await ProgramService.executeRace(raceDay.value!, selectedRaceIndex.value)
+      console.log(`Race ${selectedRaceIndex.value + 1} completed`)
 
       isRunning.value = false
+      console.log('Selected race completed')
     } catch (err) {
+      console.error('Error in startRaceDay:', err)
       isRunning.value = false
-      error.value = err instanceof Error ? err.message : 'Failed to execute race day'
-      console.error('Start race day error:', err)
+      error.value = err instanceof Error ? err.message : 'Failed to execute race'
+      console.error('Start race error:', err)
     } finally {
       isLoading.value = false
     }
   }
 
   /**
-   * Pause race day execution
+   * Pause selected race
    */
   const pauseRaceDay = async () => {
     if (!raceDay.value) return
 
     try {
+      console.log(`Pausing selected race ${selectedRaceIndex.value + 1}`)
       isRunning.value = false
       raceDay.value = await ProgramService.pauseRace(raceDay.value)
+      console.log(`Race ${selectedRaceIndex.value + 1} paused`)
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to pause race day'
-      console.error('Pause race day error:', err)
+      error.value = err instanceof Error ? err.message : 'Failed to pause race'
+      console.error('Pause race error:', err)
     }
   }
 
   /**
-   * Reset race day program
+   * Reset selected race
    */
   const resetRaceDay = async () => {
     if (!raceDay.value) return
 
     try {
-      raceDay.value = await ProgramService.resetProgram(raceDay.value)
-      selectedRaceIndex.value = 0
+      console.log(`Resetting selected race ${selectedRaceIndex.value + 1}`)
+      raceDay.value = await ProgramService.resetRace(raceDay.value, selectedRaceIndex.value)
       isRunning.value = false
+      selectedRoundIndex.value = 0 // Reset manual round selection
+      console.log(`Race ${selectedRaceIndex.value + 1} reset`)
     } catch (err) {
-      error.value = err instanceof Error ? err.message : 'Failed to reset race day'
-      console.error('Reset race day error:', err)
+      error.value = err instanceof Error ? err.message : 'Failed to reset race'
+      console.error('Reset race error:', err)
     }
   }
 
@@ -189,7 +200,12 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
   const setSelectedRaceIndex = (index: number) => {
     if (raceDay.value?.races[index]) {
       selectedRaceIndex.value = index
+      selectedRoundIndex.value = 0 // Reset round to first when race changes
     }
+  }
+
+  const setSelectedRoundIndex = (index: number) => {
+    selectedRoundIndex.value = index
   }
 
   /**
@@ -240,12 +256,14 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
     horses,
     raceDay,
     selectedRaceIndex,
+    selectedRoundIndex,
+    currentRoundIndex,
     selectedDate,
-    isLoading,
     isRunning,
+    isLoading,
     error,
 
-    // Getters
+    // Computed
     selectedRace,
     roundOptions,
     canStart,
@@ -257,6 +275,7 @@ export const useRaceBoardStore = defineStore('raceBoard', () => {
     pauseRaceDay,
     resetRaceDay,
     setSelectedRaceIndex,
+    setSelectedRoundIndex,
     selectDate,
     initialize,
     clearError,

@@ -13,8 +13,8 @@ const {
   horses,
   raceDay,
   selectedRaceIndex,
+  currentRoundIndex,
   selectedRace,
-  roundOptions,
   selectedDate,
   isRunning,
   canStart,
@@ -23,6 +23,10 @@ const {
 // Methods
 const startRaceDay = async () => {
   await store.startRaceDay()
+}
+
+const resetRace = async () => {
+  await store.resetRaceDay()
 }
 
 const setSelectedRaceIndex = (index: number) => {
@@ -50,12 +54,13 @@ onMounted(async () => {
       :horses="horses"
       :race-day="raceDay"
       :selected-race-index="selectedRaceIndex"
+      :current-round-index="currentRoundIndex"
       :selected-race="selectedRace"
-      :round-options="roundOptions"
       :selected-date="selectedDate"
       :is-running="isRunning"
       :can-start="canStart"
       @start="startRaceDay"
+      @reset="resetRace"
       @select-race="setSelectedRaceIndex"
       @select-date="selectDate"
     />

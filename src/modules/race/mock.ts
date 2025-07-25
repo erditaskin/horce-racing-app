@@ -1,7 +1,8 @@
 import type { Horse } from '@/modules/horse/types/horse'
 import { MOCK_HORSES } from '@/resources/mock/race/horse'
+import { getRandomRaceNames } from '@/resources/mock/race/names'
 import dayjs from 'dayjs'
-import type { Race, RaceDay, RaceDayGenerationOptions } from './types/race'
+import type { Race, RaceDay, RaceDayGenerationOptions, RaceHorse, RaceRound } from './types/race'
 
 /**
  * Mock service for race data generation
@@ -36,47 +37,54 @@ export class MockService {
     options: RaceDayGenerationOptions = {},
   ): RaceDay {
     const {
-      horseCount = 10,
-      raceCount = 6,
+      minRaces = 7,
+      maxRaces = 11,
       startTime = this.START_TIME,
       timeInterval = this.TIME_INTERVAL,
     } = options
 
+    const raceCount = Math.floor(Math.random() * (maxRaces - minRaces + 1)) + minRaces
+    const raceNames = getRandomRaceNames(raceCount)
     const races: Race[] = []
 
     for (let i = 0; i < raceCount; i++) {
-      const race: Race = {
-        id: `race-${date}-${i + 1}`,
-        raceNumber: i + 1,
-        distance: this.RACE_DISTANCES[i] ?? 1200 + i * 200,
-        startTime: this.calculateStartTime(startTime, i, timeInterval),
-        status: 'pending',
-        selectedHorses: [],
-        results: [],
-      }
+      // Generate 6 rounds for each race
+      const rounds: RaceRound[] = this.RACE_DISTANCES.map((distance, roundIndex) => ({
+        roundNumber: roundIndex + 1,
+        distance,
+        status: 'pending' as const,
+      }))
 
-      // Select random horses for this race
-      const selectedHorses = this.selectRandomHorses(horses, horseCount)
-      race.selectedHorses = selectedHorses.map((horse, index) => ({
+      // Select 10 random horses for this race
+      const selectedHorses = this.selectRandomHorses(horses, 10)
+      const raceHorses: RaceHorse[] = selectedHorses.map((horse, index) => ({
         horseId: horse.id,
         horse,
         laneNumber: index + 1,
         position: 0,
         progress: 0,
-        speed: this.calculateHorseSpeed(horse.condition),
+        speed: 0,
       }))
+
+      const race: Race = {
+        id: `race-${date}-${i + 1}`,
+        name: raceNames[i],
+        raceNumber: i + 1,
+        startTime: this.calculateStartTime(startTime, i, timeInterval),
+        rounds,
+        selectedHorses: raceHorses,
+        status: 'pending',
+      }
 
       races.push(race)
     }
 
     return {
-      id: `race-day-${date}`,
       date,
       races,
       status: 'generated',
       currentRaceIndex: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      currentRoundIndex: 0,
     }
   }
 
@@ -114,18 +122,6 @@ export class MockService {
   private static selectRandomHorses(horses: Horse[], count: number): Horse[] {
     const shuffled = [...horses].sort(() => Math.random() - 0.5)
     return shuffled.slice(0, count)
-  }
-
-  /**
-   * Calculate horse speed based on condition
-   * Higher condition = higher speed
-   */
-  private static calculateHorseSpeed(condition: number): number {
-    // Base speed: 8-12 m/s, modified by condition
-    const baseSpeed = 8 + (condition / 100) * 4
-    // Add some randomness (±10%)
-    const variation = 0.9 + Math.random() * 0.2
-    return baseSpeed * variation
   }
 
   /**

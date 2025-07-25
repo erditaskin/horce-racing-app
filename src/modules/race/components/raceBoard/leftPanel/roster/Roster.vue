@@ -72,12 +72,25 @@ defineProps<Props>()
 .table-header {
   display: grid;
   grid-template-columns: 1fr 80px 60px;
-  gap: 12px;
-  padding: 12px;
+  gap: 0;
+  padding: 12px 8px;
   background-color: var(--muted);
   font-weight: 600;
   font-size: 14px;
   color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+}
+
+.col-name {
+  padding-left: 8px;
+}
+
+.col-condition {
+  text-align: center;
+}
+
+.col-color {
+  text-align: center;
 }
 
 .table-body {

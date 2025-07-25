@@ -5,8 +5,9 @@
       selected: isSelected,
       current: isCurrent,
       completed: race.status === 'completed',
-      'in-progress': race.status === 'in-progress',
+      'in-progress': race.status === 'running',
     }"
+    @click="$emit('selectRace', raceIndex)"
   >
     <div class="race-header">
       <div class="race-number">Race {{ race.raceNumber }}</div>
@@ -14,7 +15,7 @@
     </div>
 
     <div class="race-details">
-      <div class="race-distance">{{ race.distance }}m</div>
+      <div class="race-name">{{ race.name }}</div>
       <div class="race-time">{{ race.startTime }}</div>
       <div class="race-horses">{{ race.selectedHorses.length }} horses</div>
     </div>
@@ -26,17 +27,22 @@ import type { Race } from '../../../../types/race'
 
 interface Props {
   race: Race
+  raceIndex: number
   isSelected: boolean
   isCurrent: boolean
 }
 
 defineProps<Props>()
 
+defineEmits<{
+  selectRace: [index: number]
+}>()
+
 const getStatusText = (status: string): string => {
   switch (status) {
     case 'pending':
       return 'Pending'
-    case 'in-progress':
+    case 'running':
       return 'Running'
     case 'completed':
       return 'Finished'
@@ -108,6 +114,10 @@ const getStatusText = (status: string): string => {
   justify-content: space-between;
   font-size: 12px;
   color: var(--muted-foreground);
+}
+
+.race-name {
+  font-weight: 500;
 }
 
 .race-distance {

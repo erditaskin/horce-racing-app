@@ -2,10 +2,15 @@
   <div class="left-panel">
     <!-- Controls -->
     <div class="controls-section">
-      <Controls :can-start="canStart" :is-running="isRunning" @start="$emit('start')" />
+      <Controls
+        :can-start="canStart"
+        :is-running="isRunning"
+        @start="$emit('start')"
+        @reset="$emit('reset')"
+      />
     </div>
 
-    <!-- Horse Roster -->
+    <!-- Horse Pool -->
     <div class="roster-section">
       <Roster :horses="horses" />
     </div>
@@ -27,6 +32,7 @@ defineProps<Props>()
 
 defineEmits<{
   start: []
+  reset: []
 }>()
 </script>
 

@@ -7,6 +7,7 @@
         :can-start="canStart"
         :is-running="isRunning"
         @start="$emit('start')"
+        @reset="$emit('reset')"
       />
 
       <!-- Center Panel -->
@@ -16,7 +17,7 @@
       <RightPanel
         :race-day="raceDay"
         :selected-race-index="selectedRaceIndex"
-        :round-options="roundOptions"
+        :current-round-index="currentRoundIndex"
         :selected-date="selectedDate"
         @select-race="$emit('selectRace', $event)"
         @select-date="$emit('selectDate', $event)"
@@ -26,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import type { AppOption } from '@/lib/types/option'
 import type { Horse } from '@/modules/horse/types/horse'
 import type { Race, RaceDay } from '../../types/race'
 import CenterPanel from './centerPanel/CenterPanel.vue'
@@ -41,8 +41,8 @@ interface Props {
   horses: Horse[]
   raceDay: RaceDay | null
   selectedRaceIndex: number
+  currentRoundIndex: number
   selectedRace: Race | null
-  roundOptions: AppOption[]
   selectedDate: string
   isRunning: boolean
   canStart: boolean
@@ -52,6 +52,7 @@ defineProps<Props>()
 
 defineEmits<{
   start: []
+  reset: []
   selectRace: [index: number]
   selectDate: [date: string]
 }>()

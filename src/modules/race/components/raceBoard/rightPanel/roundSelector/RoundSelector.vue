@@ -6,9 +6,9 @@
 
     <div class="selector-content">
       <AppSelectInput
-        name="round-select"
+        name="race-select"
         :model-value="selectedRaceIndex"
-        :options="roundOptions"
+        :options="raceOptions"
         placeholder="Choose race"
         @update:model-value="$emit('selectRace', $event)"
       />
@@ -22,7 +22,7 @@ import type { AppOption } from '@/lib/types/option'
 
 interface Props {
   selectedRaceIndex: number
-  roundOptions: AppOption[]
+  raceOptions: AppOption[]
 }
 
 defineProps<Props>()

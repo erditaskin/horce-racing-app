@@ -1,10 +1,10 @@
 <template>
   <div class="result-item">
-    <div class="result-position">{{ position }}</div>
+    <div class="result-position" :class="positionClass">{{ position }}</div>
 
     <div class="result-horse">
-      <div class="horse-color" :style="{ backgroundColor: result.horse.color }"></div>
-      <div class="horse-name">{{ result.horse.name }}</div>
+      <div class="horse-color" :style="{ backgroundColor: horseColor }"></div>
+      <div class="horse-name">{{ horseName }}</div>
     </div>
 
     <div class="result-time">{{ formatTime(result.finishTime) }}</div>
@@ -12,20 +12,60 @@
 </template>
 
 <script setup lang="ts">
-import type { RaceResult } from '../../../../types/race'
+import { computed } from 'vue'
+import type { Race, RaceResult, RoundResult } from '../../../../types/race'
 
 interface Props {
-  result: RaceResult
+  result: RaceResult | RoundResult
   position: number
+  selectedRace?: Race // To get horse info for RoundResult
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const horseColor = computed(() => {
+  if ('horse' in props.result) {
+    return props.result.horse.color
+  }
+  // For RoundResult, find horse in selectedRace
+  if (props.selectedRace) {
+    const horse = props.selectedRace.selectedHorses.find((h) => h.horseId === props.result.horseId)
+    return horse?.horse.color ?? '#ccc'
+  }
+  return '#ccc'
+})
+
+const horseName = computed(() => {
+  if ('horse' in props.result) {
+    return props.result.horse.name
+  }
+  // For RoundResult, find horse in selectedRace
+  if (props.selectedRace) {
+    const horse = props.selectedRace.selectedHorses.find((h) => h.horseId === props.result.horseId)
+    return horse?.horse.name ?? 'Unknown'
+  }
+  return 'Unknown'
+})
 
 const formatTime = (time: number): string => {
-  const seconds = Math.floor(time / 1000)
-  const milliseconds = time % 1000
-  return `${seconds}.${milliseconds.toString().padStart(3, '0')}s`
+  // Time is already in seconds, just format it nicely
+  return `${time.toFixed(2)}s`
 }
+
+const positionClass = computed(() => {
+  switch (props.position) {
+    case 1:
+      return 'position-first'
+    case 2:
+      return 'position-second'
+    case 3:
+      return 'position-third'
+    case 4:
+      return 'position-fourth'
+    default:
+      return 'position-other'
+  }
+})
 </script>
 
 <style scoped>
@@ -51,6 +91,31 @@ const formatTime = (time: number): string => {
   font-weight: 600;
   font-size: 12px;
   flex-shrink: 0;
+}
+
+.position-first {
+  background-color: #ffd700; /* Gold */
+  color: #000;
+}
+
+.position-second {
+  background-color: #c0c0c0; /* Silver */
+  color: #000;
+}
+
+.position-third {
+  background-color: #cd7f32; /* Bronze */
+  color: #fff;
+}
+
+.position-fourth {
+  background-color: #4a90e2; /* Blue */
+  color: #fff;
+}
+
+.position-other {
+  background-color: var(--primary);
+  color: white;
 }
 
 .result-horse {

@@ -1,164 +1,175 @@
 import type { Horse } from '@/modules/horse/types/horse'
 import { MOCK_HORSES } from '@/resources/mock/race/horse'
-import dayjs from 'dayjs'
-import type { Race, RaceDay, RaceDayGenerationOptions } from '../types/race'
+import { getRandomRaceNames } from '@/resources/mock/race/names'
+import type {
+  Race,
+  RaceDay,
+  RaceDayGenerationOptions,
+  RaceHorse,
+  RaceRound,
+  RoundResult,
+} from '../types/race'
 
 /**
- * Mock service for race data generation
- * Demonstrates enterprise-level data generation patterns
+ * Mock Service for Race Data
+ * Simulates API calls for race-related operations
  */
 export class MockService {
-  private static readonly RACE_DISTANCES = [1200, 1400, 1600, 1800, 2000, 2200]
-  private static readonly START_TIME = '13:00'
-  private static readonly TIME_INTERVAL = 30 // minutes
-
   /**
-   * Get horses from mock API
+   * Get horses from mock data
    */
-  static async getHorses(): Promise<Horse[]> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 300))
-
-    // Simulate potential API error (1% chance)
-    if (Math.random() < 0.01) {
-      throw new Error('Failed to fetch horses from API')
-    }
-
-    return [...MOCK_HORSES]
+  static getHorses(): Horse[] {
+    return MOCK_HORSES
   }
 
   /**
-   * Generate a complete race day with 6 races
+   * Generate race day with 7-11 races, each with 6 rounds
    */
   static generateRaceDay(
     horses: Horse[],
     date: string,
     options: RaceDayGenerationOptions = {},
   ): RaceDay {
-    const {
-      horseCount = 10,
-      raceCount = 6,
-      startTime = this.START_TIME,
-      timeInterval = this.TIME_INTERVAL,
-    } = options
+    const { minRaces = 7, maxRaces = 11, startTime = '13:00', timeInterval = 30 } = options
 
+    // Generate random number of races (7-11)
+    const raceCount = Math.floor(Math.random() * (maxRaces - minRaces + 1)) + minRaces
+
+    // Get unique race names
+    const raceNames = getRandomRaceNames(raceCount)
+
+    // Generate races
     const races: Race[] = []
+    let currentTime = startTime
 
     for (let i = 0; i < raceCount; i++) {
-      const race: Race = {
-        id: `race-${date}-${i + 1}`,
-        raceNumber: i + 1,
-        distance: this.RACE_DISTANCES[i] ?? 1200 + i * 200,
-        startTime: this.calculateStartTime(startTime, i, timeInterval),
-        status: 'pending',
-        selectedHorses: [],
-        results: [],
-      }
-
-      // Select random horses for this race
-      const selectedHorses = this.selectRandomHorses(horses, horseCount)
-      race.selectedHorses = selectedHorses.map((horse, index) => ({
-        horseId: horse.id,
-        horse,
-        laneNumber: index + 1,
-        position: 0,
-        progress: 0,
-        speed: this.calculateHorseSpeed(horse.condition),
-      }))
-
+      const race = this.generateRace(horses, i + 1, raceNames[i], currentTime, date)
       races.push(race)
+
+      // Calculate next start time
+      currentTime = this.addMinutesToTime(currentTime, timeInterval)
     }
 
     return {
-      id: `race-day-${date}`,
       date,
       races,
-      status: 'generated' as const,
+      status: 'generated',
       currentRaceIndex: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      currentRoundIndex: 0,
     }
   }
 
   /**
-   * Generate race day via API simulation
+   * Generate a single race with 6 rounds
    */
-  static async generateRaceDayAPI(
+  private static generateRace(
     horses: Horse[],
+    raceNumber: number,
+    raceName: string,
+    startTime: string,
     date: string,
-    options?: RaceDayGenerationOptions,
-  ): Promise<RaceDay> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
+  ): Race {
+    // Select 10 random horses for this race
+    const selectedHorses = this.selectRandomHorses(horses, 10)
 
-    // Simulate potential API error (2% chance)
-    if (Math.random() < 0.02) {
-      throw new Error('Failed to generate race day from API')
+    // Generate 6 rounds with different distances
+    const rounds: RaceRound[] = [
+      { roundNumber: 1, distance: 1200, status: 'pending' },
+      { roundNumber: 2, distance: 1400, status: 'pending' },
+      { roundNumber: 3, distance: 1600, status: 'pending' },
+      { roundNumber: 4, distance: 1800, status: 'pending' },
+      { roundNumber: 5, distance: 2000, status: 'pending' },
+      { roundNumber: 6, distance: 2200, status: 'pending' },
+    ]
+
+    // Create race horses with lane assignments
+    const raceHorses: RaceHorse[] = selectedHorses.map((horse, index) => ({
+      horseId: horse.id,
+      horse,
+      laneNumber: index + 1,
+      position: 0,
+      progress: 0,
+      speed: 0,
+    }))
+
+    return {
+      id: `race-${date}-${raceNumber}`,
+      name: raceName,
+      raceNumber,
+      startTime,
+      rounds,
+      selectedHorses: raceHorses,
+      status: 'pending',
+      startDate: date,
     }
-
-    return this.generateRaceDay(horses, date, options)
   }
 
   /**
-   * Calculate start time for a race
-   */
-  private static calculateStartTime(baseTime: string, raceIndex: number, interval: number): string {
-    const base = dayjs(`2000-01-01 ${baseTime}`)
-    const raceTime = base.add(raceIndex * interval, 'minute')
-    return raceTime.format('HH:mm')
-  }
-
-  /**
-   * Select random horses from the available pool
+   * Select random horses from the pool
    */
   private static selectRandomHorses(horses: Horse[], count: number): Horse[] {
-    const shuffled = [...horses].sort(() => Math.random() - 0.5)
+    const shuffled = [...horses].sort(() => 0.5 - Math.random())
     return shuffled.slice(0, count)
   }
 
   /**
-   * Calculate horse speed based on condition
-   * Higher condition = higher speed
+   * Add minutes to time string (HH:MM format)
    */
-  private static calculateHorseSpeed(condition: number): number {
-    // Base speed: 8-12 m/s, modified by condition
-    const baseSpeed = 8 + (condition / 100) * 4
-    // Add some randomness (±10%)
-    const variation = 0.9 + Math.random() * 0.2
-    return baseSpeed * variation
+  private static addMinutesToTime(time: string, minutes: number): string {
+    const [hours, mins] = time.split(':').map(Number)
+    const totalMinutes = hours * 60 + mins + minutes
+    const newHours = Math.floor(totalMinutes / 60)
+    const newMins = totalMinutes % 60
+    return `${newHours.toString().padStart(2, '0')}:${newMins.toString().padStart(2, '0')}`
   }
 
   /**
-   * Simulate race progress for a horse
+   * Simulate horse progress for a round
    */
-  static simulateHorseProgress(
-    _horse: Horse,
-    _distance: number,
-    currentProgress: number,
-    speed: number,
-  ): { progress: number; finished: boolean } {
-    // Calculate progress increment based on speed and distance
-    // Speed is in m/s, we want to move a percentage of the track
-    const progressIncrement = (speed / 10) * 0.5 // Adjust for smoother animation
-    const newProgress = Math.min(currentProgress + progressIncrement, 100)
+  static simulateHorseProgress(horses: RaceHorse[], distance: number): RoundResult[] {
+    const results = horses
+      .map((raceHorse) => {
+        // Calculate horse performance based on condition and distance
+        const baseSpeed = 50 + raceHorse.horse.condition / 2 // 50-100 km/h
+        const distanceFactor = distance / 1200
+        const speed = baseSpeed * (1 - (distanceFactor - 1) * 0.1) // 10% slower per distance increase
 
-    return {
-      progress: newProgress,
-      finished: newProgress >= 100,
-    }
+        // Calculate finish time in seconds
+        const finishTime = distance / 1000 / (speed / 3600)
+
+        // Add some randomness to make it more interesting
+        const randomFactor = 0.9 + Math.random() * 0.2 // ±10% variation
+        const finalTime = finishTime * randomFactor
+
+        return {
+          horseId: raceHorse.horseId,
+          position: 0, // Will be set after sorting
+          finishTime: finalTime,
+          speed: speed * randomFactor,
+          progress: 100,
+        }
+      })
+      .sort((a, b) => a.finishTime - b.finishTime)
+      .map((result, index) => ({
+        ...result,
+        position: index + 1,
+      }))
+
+    return results
   }
 
   /**
-   * Calculate finish time for a horse
+   * Simulate API call for race day generation
    */
-  static calculateFinishTime(distance: number, speed: number): number {
-    return (distance / speed) * 1000 // Convert to milliseconds
-  }
-
-  /**
-   * Calculate average speed for a horse
-   */
-  static calculateAverageSpeed(distance: number, finishTime: number): number {
-    return distance / (finishTime / 1000) // Convert back to m/s
+  static generateRaceDayAPI(
+    horses: Horse[],
+    date: string,
+    options?: RaceDayGenerationOptions,
+  ): Promise<RaceDay> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.generateRaceDay(horses, date, options))
+      }, 500) // Simulate API delay
+    })
   }
 }

@@ -5,7 +5,7 @@
         <span class="race-info">
           {{
             selectedRace
-              ? `Race ${selectedRace.raceNumber} - ${selectedRace.distance}m`
+              ? `Race ${selectedRace.raceNumber} - ${selectedRace.name}`
               : 'No Race Selected'
           }}
         </span>

@@ -5,8 +5,12 @@
     </div>
 
     <div class="controls-buttons">
-      <Button variant="primary" size="sm" :disabled="!canStart" @click="$emit('start')">
-        {{ isRunning ? 'Pause' : 'Start' }}
+      <Button variant="primary" size="sm" :disabled="!props.canStart" @click="handleStart">
+        {{ props.isRunning ? 'Pause' : 'Start' }}
+      </Button>
+
+      <Button variant="secondary" size="sm" :disabled="!props.canStart" @click="handleReset">
+        Reset
       </Button>
     </div>
   </div>
@@ -24,11 +28,20 @@ interface Props {
   isRunning: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
-defineEmits<{
+const emit = defineEmits<{
   start: []
+  reset: []
 }>()
+
+const handleStart = () => {
+  emit('start')
+}
+
+const handleReset = () => {
+  emit('reset')
+}
 </script>
 
 <style scoped>

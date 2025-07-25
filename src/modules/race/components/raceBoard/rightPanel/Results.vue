@@ -7,7 +7,7 @@
     </div>
 
     <div class="results-content">
-      <div v-if="props.raceDay && selectedRace" class="results-list">
+      <div v-if="raceDay && selectedRace" class="results-list">
         <div v-if="roundResults && roundResults.length > 0">
           <ResultItem
             v-for="(result, index) in roundResults"
@@ -36,8 +36,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { RaceDay } from '../../../../types/race'
-import ResultItem from './ResultItem.vue'
+import type { RaceDay, RoundResult } from '../../../types/race'
+import ResultItem from './results/ResultItem.vue'
 
 defineOptions({
   name: 'RaceResults',
@@ -52,58 +52,42 @@ interface Props {
 const props = defineProps<Props>()
 
 const selectedRace = computed(() => {
-  if (!props.raceDay) return null
+  if (!props.raceDay || props.selectedRaceIndex < 0) return null
   return props.raceDay.races[props.selectedRaceIndex] ?? null
 })
 
-const roundResults = computed(() => {
-  if (!selectedRace.value) return null
+const roundResults = computed((): RoundResult[] => {
+  if (!selectedRace.value || props.currentRoundIndex < 0) return []
+
   const round = selectedRace.value.rounds[props.currentRoundIndex]
-  return round?.results || null
+  return round?.results ?? []
 })
 </script>
 
 <style scoped>
 .results {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700;
 }
 
 .results-header {
-  padding: 16px;
-  background-color: #e5e7eb;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  @apply px-4 py-3 border-b border-gray-200 dark:border-gray-700;
 }
 
 .results-title {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--foreground);
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
 }
 
 .results-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
+  @apply p-4;
 }
 
 .results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  @apply space-y-2;
 }
 
 .race-running,
 .no-results,
 .no-race {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--muted-foreground);
-  font-size: 14px;
+  @apply text-center py-8 text-gray-500 dark:text-gray-400;
 }
 </style>
