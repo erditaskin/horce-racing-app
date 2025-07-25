@@ -11,4 +11,4 @@
 <script setup lang="ts">
 // BaseLayout - Used for authentication pages
 // Clean, centered layout without header/footer
-</script> 
+</script>

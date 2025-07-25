@@ -9,7 +9,7 @@ import { useRoute } from 'vue-router'
 
 // Component name for linting
 defineOptions({
-  name: 'AppContainer'
+  name: 'AppContainer',
 })
 
 const route = useRoute()
@@ -30,12 +30,12 @@ const showBaseLayout = computed(() => currentLayout.value === LAYOUT_BASE)
       <MainLayout v-if="showMainLayout">
         <RouterView />
       </MainLayout>
-      
+
       <!-- Base Layout for public/auth pages -->
       <BaseLayout v-else-if="showBaseLayout">
         <RouterView />
       </BaseLayout>
-      
+
       <!-- Fallback for no layout -->
       <div v-else class="min-h-screen bg-background text-foreground">
         <RouterView />

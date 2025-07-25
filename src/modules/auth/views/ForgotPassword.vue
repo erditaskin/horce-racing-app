@@ -4,7 +4,7 @@
       <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">
         Reset Password
       </h2>
-      
+
       <form @submit.prevent="handleForgotPassword" class="space-y-6">
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -19,7 +19,7 @@
             placeholder="Enter your email"
           />
         </div>
-        
+
         <Button
           type="submit"
           variant="primary"
@@ -30,7 +30,7 @@
         >
           {{ isLoading ? 'Sending...' : 'Send Reset Link' }}
         </Button>
-        
+
         <div class="text-center">
           <router-link
             to="/auth/login"
@@ -51,7 +51,7 @@ import { useRouter } from 'vue-router'
 
 // Component name for linting
 defineOptions({
-  name: 'ForgotPasswordView'
+  name: 'ForgotPasswordView',
 })
 
 const router = useRouter()
@@ -63,8 +63,8 @@ const handleForgotPassword = async () => {
   isLoading.value = true
   try {
     // TODO: Implement actual password reset
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // For now, just redirect to login
     router.push('/auth/login')
   } catch (error) {
@@ -74,4 +74,4 @@ const handleForgotPassword = async () => {
     isLoading.value = false
   }
 }
-</script> 
+</script>

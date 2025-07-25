@@ -7,7 +7,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { fetchReservedRoutes } from '../utils/route'
 
 // Collect all module routes
-const moduleRoutes = Object.values(modules).flatMap(module => module.routes) as AppRoute[]
+const moduleRoutes = Object.values(modules).flatMap((module) => module.routes) as AppRoute[]
 
 // Get reserved routes
 const reservedRoutes = fetchReservedRoutes(moduleRoutes)
@@ -18,21 +18,21 @@ const routes: RouteRecordRaw[] = []
 // Add root path redirect to default route
 routes.push({
   path: '/',
-  redirect: reservedRoutes.default
+  redirect: reservedRoutes.default,
 } as RouteRecordRaw)
 
 // Add all module routes
-routes.push(...moduleRoutes as RouteRecordRaw[])
+routes.push(...(moduleRoutes as RouteRecordRaw[]))
 
 // Add catch-all route for 404
 routes.push({
   path: '/:pathMatch(.*)*',
-  redirect: reservedRoutes.notFound
+  redirect: reservedRoutes.notFound,
 } as RouteRecordRaw)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
 
 // Add global guards

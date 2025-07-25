@@ -1,11 +1,5 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
-<template>
- race board
-</template>
+<template>race board</template>
 
-<style scoped>
-
-</style>
- 
+<style scoped></style>

@@ -1,9 +1,5 @@
 <template>
-  <AppForm
-    :validation-schema="loginSchema"
-    @submit="handleFormSubmit"
-    @error="handleFormError"
-  >
+  <AppForm :validation-schema="loginSchema" @submit="handleFormSubmit" @error="handleFormError">
     <AppFormField
       name="email"
       label="Email"
@@ -11,7 +7,7 @@
       placeholder="Enter your email"
       required
     />
-    
+
     <AppFormField
       name="password"
       label="Password"
@@ -19,7 +15,7 @@
       placeholder="Enter your password"
       required
     />
-    
+
     <Button
       type="submit"
       variant="primary"
@@ -42,7 +38,7 @@ import { ref } from 'vue'
 import * as yup from 'yup'
 
 defineOptions({
-  name: 'LoginForm'
+  name: 'LoginForm',
 })
 
 interface Props {
@@ -52,12 +48,20 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   onSuccess: () => {},
-  onError: () => {}
+  onError: () => {},
 })
 
 const loginSchema = yup.object({
-  email: yup.string().required('Email is required').email('Please enter a valid email address').trim(),
-  password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters').trim()
+  email: yup
+    .string()
+    .required('Email is required')
+    .email('Please enter a valid email address')
+    .trim(),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters')
+    .trim(),
 })
 
 type LoginFormData = yup.InferType<typeof loginSchema>
@@ -82,4 +86,4 @@ const handleFormSubmit = async (values: Record<string, unknown>) => {
 const handleFormError = (error: string) => {
   props.onError(error)
 }
-</script> 
+</script>

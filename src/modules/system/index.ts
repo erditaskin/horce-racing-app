@@ -6,7 +6,7 @@ const systemModule: AppModule = {
   name: SYSTEM_MODULE_NAME,
   path: '/system',
   isActive: true,
-  routes
+  routes,
 }
 
-export default systemModule 
+export default systemModule

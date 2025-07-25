@@ -45,5 +45,5 @@ export const THEME_CSS_VARS = {
   SUCCESS: '--success',
   SUCCESS_FOREGROUND: '--success-foreground',
   WARNING: '--warning',
-  WARNING_FOREGROUND: '--warning-foreground'
+  WARNING_FOREGROUND: '--warning-foreground',
 } as const

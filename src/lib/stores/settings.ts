@@ -1,4 +1,9 @@
-import { THEME_MODE_DARK, THEME_MODE_LIGHT, THEME_STORAGE_KEY, type ThemeMode } from '@/lib/constants/theme'
+import {
+  THEME_MODE_DARK,
+  THEME_MODE_LIGHT,
+  THEME_STORAGE_KEY,
+  type ThemeMode,
+} from '@/lib/constants/theme'
 import { applyThemeTokens } from '@/lib/theme/default'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
@@ -13,12 +18,12 @@ export interface UserPreferences {
 export const useSettingsStore = defineStore('settings', () => {
   // State - only manage mode, colors come from theme tokens
   const themeMode = ref<ThemeMode>(THEME_MODE_LIGHT)
-  
+
   const preferences = ref<UserPreferences>({
     autoSave: true,
     notifications: true,
     soundEnabled: false,
-    animationSpeed: 'normal'
+    animationSpeed: 'normal',
   })
 
   const isLoading = ref(false)
@@ -27,9 +32,12 @@ export const useSettingsStore = defineStore('settings', () => {
   const isDarkMode = computed(() => themeMode.value === THEME_MODE_DARK)
   const animationSpeedMultiplier = computed(() => {
     switch (preferences.value.animationSpeed) {
-      case 'slow': return 1.5
-      case 'fast': return 0.5
-      default: return 1
+      case 'slow':
+        return 1.5
+      case 'fast':
+        return 0.5
+      default:
+        return 1
     }
   })
 
@@ -53,7 +61,7 @@ export const useSettingsStore = defineStore('settings', () => {
       // Load from localStorage
       const storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
       const storedPreferences = localStorage.getItem('preferences')
-      
+
       if (storedTheme) {
         try {
           const parsedTheme = JSON.parse(storedTheme)
@@ -67,7 +75,7 @@ export const useSettingsStore = defineStore('settings', () => {
         // No stored theme, default to light mode
         themeMode.value = THEME_MODE_LIGHT
       }
-      
+
       if (storedPreferences) {
         try {
           preferences.value = { ...preferences.value, ...JSON.parse(storedPreferences) }
@@ -75,13 +83,13 @@ export const useSettingsStore = defineStore('settings', () => {
           console.error('Failed to restore preferences:', error)
         }
       }
-      
+
       // Apply theme tokens to DOM
       applyThemeTokens(themeMode.value)
-      
+
       // Save current theme mode to localStorage to ensure sync
       localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ mode: themeMode.value }))
-      
+
       console.log('Theme settings initialized successfully')
     } catch (error) {
       console.error('Failed to initialize theme settings:', error)
@@ -94,24 +102,28 @@ export const useSettingsStore = defineStore('settings', () => {
     localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ mode: newMode }))
   })
 
-  watch(preferences, (newPreferences) => {
-    localStorage.setItem('preferences', JSON.stringify(newPreferences))
-  }, { deep: true })
+  watch(
+    preferences,
+    (newPreferences) => {
+      localStorage.setItem('preferences', JSON.stringify(newPreferences))
+    },
+    { deep: true },
+  )
 
   return {
     // State
     themeMode,
     preferences,
     isLoading,
-    
+
     // Getters
     isDarkMode,
     animationSpeedMultiplier,
-    
+
     // Actions
     toggleTheme,
     setTheme,
     updatePreferences,
-    initializeSettings
+    initializeSettings,
   }
 })

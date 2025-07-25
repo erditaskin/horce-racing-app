@@ -4,7 +4,7 @@
       <h2 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-8">
         Create Account
       </h2>
-      
+
       <form @submit.prevent="handleRegister" class="space-y-6">
         <div>
           <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -19,7 +19,7 @@
             placeholder="Enter your first name"
           />
         </div>
-        
+
         <div>
           <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Last Name
@@ -33,7 +33,7 @@
             placeholder="Enter your last name"
           />
         </div>
-        
+
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Email
@@ -47,7 +47,7 @@
             placeholder="Enter your email"
           />
         </div>
-        
+
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
             Password
@@ -61,7 +61,7 @@
             placeholder="Enter your password"
           />
         </div>
-        
+
         <Button
           type="submit"
           variant="primary"
@@ -72,7 +72,7 @@
         >
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </Button>
-        
+
         <div class="text-center">
           <router-link
             to="/auth/login"
@@ -93,7 +93,7 @@ import { useRouter } from 'vue-router'
 
 // Component name for linting
 defineOptions({
-  name: 'RegisterView'
+  name: 'RegisterView',
 })
 
 const router = useRouter()
@@ -108,8 +108,8 @@ const handleRegister = async () => {
   isLoading.value = true
   try {
     // TODO: Implement actual registration
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
     // For now, just redirect to login
     router.push('/auth/login')
   } catch (error) {
@@ -119,4 +119,4 @@ const handleRegister = async () => {
     isLoading.value = false
   }
 }
-</script> 
+</script>

@@ -6,11 +6,9 @@
         <div class="flex items-center space-x-8">
           <!-- Logo -->
           <div class="flex-shrink-0">
-            <h1 class="text-xl font-bold text-primary">
-              🏇 Horse Racing
-            </h1>
+            <h1 class="text-xl font-bold text-primary">🏇 Horse Racing</h1>
           </div>
-          
+
           <!-- Navigation -->
           <nav class="hidden md:flex space-x-8">
             <router-link
@@ -36,7 +34,7 @@
             </router-link>
           </nav>
         </div>
-        
+
         <!-- Right side actions -->
         <div class="flex items-center space-x-4">
           <!-- Theme Toggle -->
@@ -48,7 +46,7 @@
             <Sun v-if="settingsStore.isDarkMode" class="w-5 h-5" />
             <Moon v-else class="w-5 h-5" />
           </button>
-          
+
           <!-- User Menu -->
           <div class="relative">
             <button
@@ -59,7 +57,7 @@
               <span>{{ authStore.fullName }}</span>
               <ChevronDown class="w-4 h-4" />
             </button>
-            
+
             <!-- User Dropdown -->
             <div
               v-if="isUserMenuOpen"
@@ -92,7 +90,7 @@ import { useRouter } from 'vue-router'
 
 // Component name for linting
 defineOptions({
-  name: 'MainHeader'
+  name: 'MainHeader',
 })
 
 const router = useRouter()
@@ -106,4 +104,4 @@ const handleLogout = async () => {
   router.push('/auth/login')
   isUserMenuOpen.value = false
 }
-</script> 
+</script>

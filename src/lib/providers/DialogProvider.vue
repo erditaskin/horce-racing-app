@@ -12,7 +12,7 @@ const modalState = reactive({
   content: '',
   onConfirm: null as (() => void) | null,
   onCancel: null as (() => void) | null,
-  onClose: null as (() => void) | null
+  onClose: null as (() => void) | null,
 })
 
 // Confirm state
@@ -25,7 +25,7 @@ const confirmState = reactive({
   cancelText: '',
   showCancel: true,
   onConfirm: null as (() => void) | null,
-  onCancel: null as (() => void) | null
+  onCancel: null as (() => void) | null,
 })
 
 // Modal methods
@@ -46,13 +46,13 @@ const modal = {
     modalState.onCancel = options.onCancel || null
     modalState.onClose = options.onClose || null
   },
-  
+
   close: () => {
     modalState.isOpen = false
     if (modalState.onClose) {
       modalState.onClose()
     }
-  }
+  },
 }
 
 // Confirm methods
@@ -77,10 +77,10 @@ const confirm = {
     confirmState.onConfirm = options.onConfirm || null
     confirmState.onCancel = options.onCancel || null
   },
-  
+
   hide: () => {
     confirmState.isOpen = false
-  }
+  },
 }
 
 // Event handlers
@@ -119,7 +119,7 @@ const handleConfirmCancel = () => {
 // Provide to child components
 provide('dialog', {
   modal,
-  confirm
+  confirm,
 })
 </script>
 
@@ -127,7 +127,7 @@ provide('dialog', {
   <div>
     <!-- Render children -->
     <slot />
-    
+
     <!-- Global Modal -->
     <Modal
       :is-open="modalState.isOpen"
@@ -138,27 +138,17 @@ provide('dialog', {
       @cancel="handleModalCancel"
     >
       <div v-html="modalState.content"></div>
-      
+
       <template #footer>
-        <Button
-          v-if="modalState.onCancel"
-          variant="secondary"
-          size="sm"
-          @click="handleModalCancel"
-        >
+        <Button v-if="modalState.onCancel" variant="secondary" size="sm" @click="handleModalCancel">
           Cancel
         </Button>
-        <Button
-          v-if="modalState.onConfirm"
-          variant="primary"
-          size="sm"
-          @click="handleModalConfirm"
-        >
+        <Button v-if="modalState.onConfirm" variant="primary" size="sm" @click="handleModalConfirm">
           Confirm
         </Button>
       </template>
     </Modal>
-    
+
     <!-- Global Confirm -->
     <Confirm
       :is-open="confirmState.isOpen"
@@ -173,4 +163,4 @@ provide('dialog', {
       @cancel="handleConfirmCancel"
     />
   </div>
-</template> 
+</template>

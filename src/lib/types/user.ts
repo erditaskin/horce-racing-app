@@ -32,4 +32,4 @@ export interface UserPermissions {
   hasAnyRole: (roles: string[]) => boolean
   hasAllRoles: (roles: string[]) => boolean
   getRoleGroups: () => RoleGroup[]
-} 
+}

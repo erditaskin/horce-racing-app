@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 // Component name for linting
 defineOptions({
-  name: 'BaseButton'
+  name: 'BaseButton',
 })
 
 const props = defineProps<{
@@ -25,11 +25,21 @@ const variantClasses = computed(() => [
   props.size === 'md' ? 'px-4 py-2 text-sm' : '',
   props.size === 'lg' ? 'px-6 py-3 text-base' : '',
   // Variant classes
-  props.variant === 'primary' ? 'bg-primary text-white hover:bg-primary/90 focus:ring-primary shadow-medium font-semibold' : '',
-  props.variant === 'secondary' ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-secondary shadow-sm font-medium' : '',
-  props.variant === 'danger' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus:ring-destructive shadow-sm font-medium' : '',
-  props.variant === 'success' ? 'bg-success text-success-foreground hover:bg-success/90 focus:ring-success shadow-sm font-medium' : '',
-  props.variant === 'warning' ? 'bg-warning text-warning-foreground hover:bg-warning/90 focus:ring-warning shadow-sm font-medium' : ''
+  props.variant === 'primary'
+    ? 'bg-primary text-white hover:bg-primary/90 focus:ring-primary shadow-medium font-semibold'
+    : '',
+  props.variant === 'secondary'
+    ? 'bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-secondary shadow-sm font-medium'
+    : '',
+  props.variant === 'danger'
+    ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus:ring-destructive shadow-sm font-medium'
+    : '',
+  props.variant === 'success'
+    ? 'bg-success text-success-foreground hover:bg-success/90 focus:ring-success shadow-sm font-medium'
+    : '',
+  props.variant === 'warning'
+    ? 'bg-warning text-warning-foreground hover:bg-warning/90 focus:ring-warning shadow-sm font-medium'
+    : '',
 ])
 </script>
 
@@ -43,4 +53,4 @@ const variantClasses = computed(() => [
     <div v-if="props.loading" class="spinner mr-2"></div>
     <slot />
   </button>
-</template> 
+</template>

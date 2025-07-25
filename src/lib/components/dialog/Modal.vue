@@ -5,7 +5,7 @@ import Button from '../ui/Button.vue'
 
 // Component name for linting
 defineOptions({
-  name: 'ModalDialog'
+  name: 'ModalDialog',
 })
 
 interface Props {
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
   closeOnOverlay: true,
   closeOnEscape: true,
-  showCloseButton: true
+  showCloseButton: true,
 })
 
 const emit = defineEmits<{
@@ -40,7 +40,7 @@ const sizeClasses = computed(() => {
     sm: 'max-w-md',
     md: 'max-w-lg',
     lg: 'max-w-2xl',
-    xl: 'max-w-4xl'
+    xl: 'max-w-4xl',
   }
   return sizes[props.size]
 })
@@ -66,20 +66,20 @@ onMounted(async () => {
   if (props.isOpen) {
     // Store current active element
     previousActiveElement = document.activeElement as HTMLElement
-    
+
     // Wait for modal to be rendered
     await nextTick()
-    
+
     // Focus first focusable element in modal
     if (modalElement.value) {
       const focusableElements = modalElement.value.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       )
       if (focusableElements.length > 0) {
-        (focusableElements[0] as HTMLElement).focus()
+        ;(focusableElements[0] as HTMLElement).focus()
       }
     }
-    
+
     // Add escape key listener
     document.addEventListener('keydown', handleEscape)
   }
@@ -87,7 +87,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleEscape)
-  
+
   // Restore focus to previous element
   if (previousActiveElement) {
     previousActiveElement.focus()
@@ -105,37 +105,32 @@ onUnmounted(() => {
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-50 overflow-y-auto"
-        @click="handleOverlayClick"
-      >
+      <div v-if="isOpen" class="fixed inset-0 z-50 overflow-y-auto" @click="handleOverlayClick">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        
+
         <!-- Modal -->
         <div class="flex min-h-full items-center justify-center p-4">
           <div
             ref="modalElement"
             :class="[
               'relative w-full bg-card text-card-foreground rounded-lg shadow-xl transform transition-all',
-              sizeClasses
+              sizeClasses,
             ]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-title"
           >
             <!-- Header -->
-            <div v-if="title || showCloseButton" class="flex items-center justify-between p-6 border-b border-border">
-              <h3
-                v-if="title"
-                id="modal-title"
-                class="text-lg font-medium text-foreground"
-              >
+            <div
+              v-if="title || showCloseButton"
+              class="flex items-center justify-between p-6 border-b border-border"
+            >
+              <h3 v-if="title" id="modal-title" class="text-lg font-medium text-foreground">
                 {{ title }}
               </h3>
               <div v-else></div>
-              
+
               <Button
                 v-if="showCloseButton"
                 variant="secondary"
@@ -147,14 +142,17 @@ onUnmounted(() => {
                 <X class="w-4 h-4" />
               </Button>
             </div>
-            
+
             <!-- Content -->
             <div class="p-6">
               <slot />
             </div>
-            
+
             <!-- Footer -->
-            <div v-if="$slots.footer" class="flex items-center justify-end space-x-3 p-6 border-t border-border">
+            <div
+              v-if="$slots.footer"
+              class="flex items-center justify-end space-x-3 p-6 border-t border-border"
+            >
               <slot name="footer" />
             </div>
           </div>
@@ -162,4 +160,4 @@ onUnmounted(() => {
       </div>
     </Transition>
   </Teleport>
-</template> 
+</template>

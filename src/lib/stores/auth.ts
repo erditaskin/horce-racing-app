@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       // Use AuthService instead of direct mock
       const authResponse = await AuthService.login({ email, password })
-      
+
       // Convert AuthResponse to AppUser
       const appUser: AppUser = {
         id: authResponse.user.id,
@@ -32,13 +32,13 @@ export const useAuthStore = defineStore('auth', () => {
         isAuthorized: true,
         roleGroups: authResponse.user.roleGroups,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
-      
+
       // Update store state
       user.value = appUser
       token.value = authResponse.token
-      
+
       // Store in localStorage
       localStorage.setItem('auth_token', authResponse.token)
       localStorage.setItem('user', JSON.stringify(appUser))
@@ -85,7 +85,7 @@ export const useAuthStore = defineStore('auth', () => {
   const initializeAuth = async (): Promise<void> => {
     const storedToken = localStorage.getItem('auth_token')
     const tokenExpiresAt = localStorage.getItem('token_expires_at')
-    
+
     if (storedToken && tokenExpiresAt) {
       try {
         // Check if token is expired
@@ -93,10 +93,10 @@ export const useAuthStore = defineStore('auth', () => {
         if (expiresAt > new Date()) {
           // Token is still valid, set it first
           token.value = storedToken
-          
+
           // Fetch current user from /auth/me endpoint
           const currentUser = await AuthService.getCurrentUser()
-          
+
           // Convert to AppUser
           const appUser: AppUser = {
             id: currentUser.id,
@@ -106,15 +106,15 @@ export const useAuthStore = defineStore('auth', () => {
             isAuthorized: true,
             roleGroups: currentUser.roleGroups,
             createdAt: new Date(),
-            updatedAt: new Date()
+            updatedAt: new Date(),
           }
-          
+
           // Update store state
           user.value = appUser
-          
+
           // Update localStorage with fresh user data
           localStorage.setItem('user', JSON.stringify(appUser))
-          
+
           console.log('Authentication initialized successfully')
         } else {
           // Token expired, clear storage
@@ -133,15 +133,15 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     token,
     isLoading,
-    
+
     // Getters
     isAuthorized,
     fullName,
-    
+
     // Actions
     login,
     logout,
     refreshToken,
-    initializeAuth
+    initializeAuth,
   }
 })

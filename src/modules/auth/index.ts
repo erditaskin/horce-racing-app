@@ -6,7 +6,7 @@ const authModule: AppModule = {
   name: AUTH_MODULE_NAME,
   path: '/auth',
   isActive: true,
-  routes
+  routes,
 }
 
-export default authModule 
+export default authModule

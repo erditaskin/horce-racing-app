@@ -7,7 +7,7 @@ import { useSettingsStore } from '@/lib/stores/settings'
 import { onMounted } from 'vue'
 
 defineOptions({
-  name: 'ThemeSetup'
+  name: 'ThemeSetup',
 })
 
 const settingsStore = useSettingsStore()
@@ -24,4 +24,4 @@ const initializeTheme = async () => {
 onMounted(() => {
   initializeTheme()
 })
-</script> 
+</script>

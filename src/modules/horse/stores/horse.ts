@@ -19,7 +19,7 @@ export const useHorseStore = defineStore('horse', () => {
   const fetchHorses = async (): Promise<void> => {
     isLoading.value = true
     error.value = null
-    
+
     try {
       // Use HorseService instead of direct mock
       const fetchedHorses = await HorseService.fetchHorses()
@@ -59,7 +59,7 @@ export const useHorseStore = defineStore('horse', () => {
     clearSelection()
     const available = [...horses.value]
     const selectedCount = Math.min(count, available.length)
-    
+
     for (let i = 0; i < selectedCount; i++) {
       const randomIndex = Math.floor(Math.random() * available.length)
       const horse = available.splice(randomIndex, 1)[0]
@@ -71,7 +71,7 @@ export const useHorseStore = defineStore('horse', () => {
     try {
       // Use HorseService to update condition
       const updatedHorse = await HorseService.updateHorseCondition(horseId, condition)
-      
+
       // Update local state
       const horse = horses.value.find((h: Horse) => h.id === horseId)
       if (horse) {
@@ -89,18 +89,18 @@ export const useHorseStore = defineStore('horse', () => {
     selectedHorses,
     isLoading,
     error,
-    
+
     // Getters
     totalHorses,
     selectedHorseIds,
     availableHorses,
-    
+
     // Actions
     fetchHorses,
     selectHorse,
     deselectHorse,
     clearSelection,
     selectRandomHorses,
-    updateHorseCondition
+    updateHorseCondition,
   }
-}) 
+})

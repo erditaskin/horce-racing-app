@@ -13,7 +13,7 @@ export class HorseService {
   static async fetchHorses(): Promise<Horse[]> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // Use mock service to generate horses
       const horses = HorseMockService.generateHorses(100)
@@ -33,7 +33,7 @@ export class HorseService {
   static async updateHorseCondition(horseId: string, condition: number): Promise<Horse> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       // Generate mock response using mock service
       const mockHorse = HorseMockService.generateRandomHorseData()
@@ -43,7 +43,8 @@ export class HorseService {
       // Simulate API call (in real app, this would be: return Api.patch(`/horses/${horseId}`, { condition }))
       return mockHorse
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to update horse condition'
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to update horse condition'
       throw new Error(errorMessage)
     }
   }
@@ -55,7 +56,7 @@ export class HorseService {
   static async getHorseById(horseId: string): Promise<Horse | null> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 300))
 
       // Generate mock horse
       const mockHorse = HorseMockService.generateRandomHorseData()
@@ -68,4 +69,4 @@ export class HorseService {
       throw new Error(errorMessage)
     }
   }
-} 
+}

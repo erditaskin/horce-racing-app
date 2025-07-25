@@ -4,7 +4,7 @@ import Button from '../ui/Button.vue'
 
 // Component name for linting
 defineOptions({
-  name: 'ConfirmDialog'
+  name: 'ConfirmDialog',
 })
 
 interface Props {
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'info',
   confirmText: 'Confirm',
   cancelText: 'Cancel',
-  showCancel: true
+  showCancel: true,
 })
 
 const emit = defineEmits<{
@@ -35,23 +35,23 @@ const typeConfig = {
   info: {
     icon: Info,
     iconClass: 'text-primary',
-    confirmVariant: 'primary' as const
+    confirmVariant: 'primary' as const,
   },
   warning: {
     icon: AlertTriangle,
     iconClass: 'text-warning',
-    confirmVariant: 'warning' as const
+    confirmVariant: 'warning' as const,
   },
   error: {
     icon: XCircle,
     iconClass: 'text-destructive',
-    confirmVariant: 'danger' as const
+    confirmVariant: 'danger' as const,
   },
   success: {
     icon: CheckCircle,
     iconClass: 'text-success',
-    confirmVariant: 'success' as const
-  }
+    confirmVariant: 'success' as const,
+  },
 }
 
 const config = typeConfig[props.type]
@@ -80,14 +80,10 @@ const handleClose = () => {
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <div
-        v-if="isOpen"
-        class="fixed inset-0 z-50 overflow-y-auto"
-        @click="handleClose"
-      >
+      <div v-if="isOpen" class="fixed inset-0 z-50 overflow-y-auto" @click="handleClose">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
-        
+
         <!-- Confirm Dialog -->
         <div class="flex min-h-full items-center justify-center p-4">
           <div
@@ -103,37 +99,25 @@ const handleClose = () => {
                 <IconComponent :class="['w-6 h-6', config.iconClass]" />
               </div>
               <div class="ml-3">
-                <h3
-                  id="confirm-title"
-                  class="text-lg font-medium text-foreground"
-                >
+                <h3 id="confirm-title" class="text-lg font-medium text-foreground">
                   {{ title }}
                 </h3>
               </div>
             </div>
-            
+
             <!-- Content -->
             <div class="p-6">
               <p class="text-sm text-muted-foreground">
                 {{ message }}
               </p>
             </div>
-            
+
             <!-- Footer -->
             <div class="flex items-center justify-end space-x-3 p-6 border-t border-border">
-              <Button
-                v-if="showCancel"
-                variant="secondary"
-                size="sm"
-                @click="handleCancel"
-              >
+              <Button v-if="showCancel" variant="secondary" size="sm" @click="handleCancel">
                 {{ cancelText }}
               </Button>
-              <Button
-                :variant="config.confirmVariant"
-                size="sm"
-                @click="handleConfirm"
-              >
+              <Button :variant="config.confirmVariant" size="sm" @click="handleConfirm">
                 {{ confirmText }}
               </Button>
             </div>
@@ -142,4 +126,4 @@ const handleClose = () => {
       </div>
     </Transition>
   </Teleport>
-</template> 
+</template>

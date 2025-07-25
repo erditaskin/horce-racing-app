@@ -29,7 +29,7 @@ export const DEFAULT_THEME_TOKENS = {
     [THEME_CSS_VARS.SUCCESS]: 'hsl(142.1 76.2% 36.3%)', // green-600
     [THEME_CSS_VARS.SUCCESS_FOREGROUND]: 'hsl(210 40% 98%)', // slate-50
     [THEME_CSS_VARS.WARNING]: 'hsl(38 92% 50%)', // amber-500
-    [THEME_CSS_VARS.WARNING_FOREGROUND]: 'hsl(222.2 84% 4.9%)' // slate-950
+    [THEME_CSS_VARS.WARNING_FOREGROUND]: 'hsl(222.2 84% 4.9%)', // slate-950
   },
   [THEME_MODE_DARK]: {
     [THEME_CSS_VARS.BACKGROUND]: 'hsl(222.2 84% 4.9%)', // slate-950
@@ -54,8 +54,8 @@ export const DEFAULT_THEME_TOKENS = {
     [THEME_CSS_VARS.SUCCESS]: 'hsl(142.1 70.6% 45.3%)', // green-500
     [THEME_CSS_VARS.SUCCESS_FOREGROUND]: 'hsl(222.2 84% 4.9%)', // slate-950
     [THEME_CSS_VARS.WARNING]: 'hsl(48 96% 53%)', // amber-400
-    [THEME_CSS_VARS.WARNING_FOREGROUND]: 'hsl(222.2 84% 4.9%)' // slate-950
-  }
+    [THEME_CSS_VARS.WARNING_FOREGROUND]: 'hsl(222.2 84% 4.9%)', // slate-950
+  },
 } as const
 
 /**
@@ -71,12 +71,12 @@ export const getThemeTokens = (mode: 'light' | 'dark') => {
 export const applyThemeTokens = (mode: 'light' | 'dark'): void => {
   const root = document.documentElement
   const tokens = getThemeTokens(mode)
-  
+
   // Set data-theme attribute
   root.setAttribute('data-theme', mode)
-  
+
   // Apply all CSS custom properties
   Object.entries(tokens).forEach(([property, value]) => {
     root.style.setProperty(property, value)
   })
-} 
+}

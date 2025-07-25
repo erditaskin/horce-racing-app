@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-destructive ml-1">*</span>
     </label>
-    
+
     <!-- Dynamic input rendering based on fieldType -->
     <component
       :is="inputComponent"
@@ -15,16 +15,13 @@
       :options="options"
       v-bind="$attrs"
     />
-    
-    <ErrorMessage
-      :name="name"
-      v-slot="{ message }"
-    >
+
+    <ErrorMessage :name="name" v-slot="{ message }">
       <div class="mt-2 text-sm font-bold text-destructive">
         {{ message }}
       </div>
     </ErrorMessage>
-    
+
     <p v-if="helpText" class="mt-2 text-sm text-muted-foreground">
       {{ helpText }}
     </p>
@@ -39,7 +36,7 @@ import AppSelectInput from '../input/AppSelectInput.vue'
 import AppTextInput from '../input/AppTextInput.vue'
 
 defineOptions({
-  name: 'AppFormField'
+  name: 'AppFormField',
 })
 
 interface Props {
@@ -60,7 +57,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
   required: false,
   disabled: false,
-  helpText: ''
+  helpText: '',
 })
 
 // Field context is used by ErrorMessage component
@@ -90,4 +87,4 @@ const inputType = computed(() => {
 .form-field {
   @apply w-full;
 }
-</style> 
+</style>

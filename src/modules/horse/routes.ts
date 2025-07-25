@@ -1,5 +1,5 @@
-import type { AppRoute } from '@/lib/types';
-import { HORSE_ROLE_HORSE_LIST_PAGE_VIEW, HORSE_ROUTE_HORSE_LIST } from './constants';
+import type { AppRoute } from '@/lib/types'
+import { HORSE_ROLE_HORSE_LIST_PAGE_VIEW, HORSE_ROUTE_HORSE_LIST } from './constants'
 
 const routes: AppRoute[] = [
   {
@@ -7,9 +7,9 @@ const routes: AppRoute[] = [
     component: () => import('./views/HorseList.vue'),
     meta: {
       title: 'Horse List',
-      permissions: [HORSE_ROLE_HORSE_LIST_PAGE_VIEW]
-    }
+      permissions: [HORSE_ROLE_HORSE_LIST_PAGE_VIEW],
+    },
   },
 ]
 
-export default routes;
+export default routes

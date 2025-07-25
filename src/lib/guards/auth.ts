@@ -9,26 +9,26 @@ import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 export const authGuard = async (
   to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ): Promise<void> => {
   const authStore = useAuthStore()
-  
+
   // Skip auth check for public routes
   if (to.meta?.isPublic) {
     next()
     return
   }
-  
+
   // Check if user is authenticated
   if (authStore.isAuthorized) {
     next()
     return
   }
-  
+
   // Not authenticated - redirect to discovered login route
   next({
     path: reservedRoutes.login,
-    query: { redirect: to.fullPath }
+    query: { redirect: to.fullPath },
   })
 }
 
@@ -39,16 +39,16 @@ export const authGuard = async (
 export const requireGuest = async (
   _to: RouteLocationNormalized,
   _from: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ): Promise<void> => {
   const authStore = useAuthStore()
-  
+
   // If user is authenticated, redirect to discovered default route
   if (authStore.isAuthorized) {
     next({ path: reservedRoutes.default })
     return
   }
-  
+
   // Not authenticated - allow access to public route
   next()
-} 
+}

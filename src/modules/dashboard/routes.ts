@@ -1,5 +1,5 @@
-import type { AppRoute } from '@/lib/types';
-import { DASHBOARD_ROUTE_DASHBOARD } from './constants';
+import type { AppRoute } from '@/lib/types'
+import { DASHBOARD_ROUTE_DASHBOARD } from './constants'
 
 const routes: AppRoute[] = [
   {
@@ -7,9 +7,9 @@ const routes: AppRoute[] = [
     component: () => import('./views/DashBoard.vue'),
     meta: {
       title: 'Dashboard',
-      isDefault: true
-    }
+      isDefault: true,
+    },
   },
 ]
 
-export default routes;  
+export default routes

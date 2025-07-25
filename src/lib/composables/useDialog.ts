@@ -29,52 +29,52 @@ interface DialogAPI {
 
 export const useDialog = (): DialogAPI => {
   const dialog = inject<DialogAPI>('dialog')
-  
+
   if (!dialog) {
     throw new Error('useDialog must be used within DialogProvider')
   }
-  
+
   return dialog
 }
 
 // Convenience functions for common use cases
 export const useConfirm = () => {
   const { confirm } = useDialog()
-  
+
   return {
     // Simple confirmations
     info: (message: string, onConfirm?: () => void) => {
       confirm.show({
         message,
         type: 'info',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     warning: (message: string, onConfirm?: () => void) => {
       confirm.show({
         message,
         type: 'warning',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     error: (message: string, onConfirm?: () => void) => {
       confirm.show({
         message,
         type: 'error',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     success: (message: string, onConfirm?: () => void) => {
       confirm.show({
         message,
         type: 'success',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     // Delete confirmation
     delete: (itemName: string, onConfirm?: () => void) => {
       confirm.show({
@@ -83,40 +83,40 @@ export const useConfirm = () => {
         type: 'error',
         confirmText: 'Delete',
         cancelText: 'Cancel',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     // Custom confirmations
-    custom: confirm.show
+    custom: confirm.show,
   }
 }
 
 export const useModal = () => {
   const { modal } = useDialog()
-  
+
   return {
     // Simple modals
     info: (title: string, content: string, onConfirm?: () => void) => {
       modal.open({
         title,
         content,
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     // Large content modals
     large: (title: string, content: string, onConfirm?: () => void) => {
       modal.open({
         title,
         content,
         size: 'lg',
-        onConfirm
+        onConfirm,
       })
     },
-    
+
     // Custom modals
     custom: modal.open,
-    close: modal.close
+    close: modal.close,
   }
-} 
+}

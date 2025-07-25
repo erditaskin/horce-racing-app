@@ -12,13 +12,15 @@ export const extractModuleName = (path: string): string => {
  * @param modulesGlob - Raw glob import result
  * @returns Transformed object with module names as keys
  */
-export const transformModules = <T>(modulesGlob: Record<string, { default: T }>): Record<string, T> => {
+export const transformModules = <T>(
+  modulesGlob: Record<string, { default: T }>,
+): Record<string, T> => {
   const modules: Record<string, T> = {}
-  
+
   Object.entries(modulesGlob).forEach(([path, module]) => {
     const moduleName = extractModuleName(path)
     modules[moduleName] = module.default
   })
-  
+
   return modules
 }

@@ -11,7 +11,7 @@ export class AuthService {
   static async login(credentials: LoginRequest): Promise<AuthResponse> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // Mock validation
       if (!credentials.email || !credentials.password) {
@@ -30,19 +30,19 @@ export class AuthService {
             roleGroups: [
               {
                 key: 'horse-operator',
-                roles: ['horse-list-view', 'horse-edit']
+                roles: ['horse-list-view', 'horse-edit'],
               },
               {
                 key: 'race-operator',
-                roles: ['race-view', 'race-manage']
-              }
-            ]
+                roles: ['race-view', 'race-manage'],
+              },
+            ],
           },
-          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+          expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
         },
         success: true,
         message: 'Login successful',
-        timestamp: new Date()
+        timestamp: new Date(),
       }
 
       // Simulate API call (in real app, this would be: return Api.post('/auth/login', credentials))
@@ -61,7 +61,7 @@ export class AuthService {
   static async logout(): Promise<void> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       // Simulate API call (in real app, this would be: return Api.post('/auth/logout'))
       console.log('User logged out successfully')
@@ -77,7 +77,7 @@ export class AuthService {
   static async getCurrentUser(): Promise<AuthResponse['user']> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise((resolve) => setTimeout(resolve, 300))
 
       // Mock current user response
       return {
@@ -88,13 +88,13 @@ export class AuthService {
         roleGroups: [
           {
             key: 'horse-operator',
-            roles: ['horse-list-view', 'horse-edit']
+            roles: ['horse-list-view', 'horse-edit'],
           },
           {
             key: 'race-operator',
-            roles: ['race-view', 'race-manage']
-          }
-        ]
+            roles: ['race-view', 'race-manage'],
+          },
+        ],
       }
     } catch {
       throw new Error('Failed to get current user')
@@ -108,15 +108,15 @@ export class AuthService {
   static async refreshToken(): Promise<{ token: string; expiresAt: string }> {
     try {
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       // Mock token refresh response
       return {
         token: 'mock-jwt-token-refreshed-' + Date.now(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       }
     } catch {
       throw new Error('Token refresh failed')
     }
   }
-} 
+}

@@ -1,9 +1,6 @@
 import { LAYOUT_BASE } from '@/lib/constants/layout'
 import type { AppRoute } from '@/lib/types'
-import {
-    SYSTEM_ROUTE_NOT_FOUND,
-    SYSTEM_ROUTE_UNAUTHORIZED
-} from './constants'
+import { SYSTEM_ROUTE_NOT_FOUND, SYSTEM_ROUTE_UNAUTHORIZED } from './constants'
 
 const routes: AppRoute[] = [
   {
@@ -14,8 +11,8 @@ const routes: AppRoute[] = [
       title: 'Unauthorized',
       isUnauthorized: true,
       requiresAuth: false,
-      isPublic: true
-    }
+      isPublic: true,
+    },
   },
   {
     path: SYSTEM_ROUTE_NOT_FOUND,
@@ -25,9 +22,9 @@ const routes: AppRoute[] = [
       title: 'Page Not Found',
       isNotFound: true,
       requiresAuth: false,
-      isPublic: true
-    }
-  }
+      isPublic: true,
+    },
+  },
 ]
 
-export default routes 
+export default routes

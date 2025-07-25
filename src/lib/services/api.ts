@@ -16,4 +16,4 @@ export const apiRequestInstance = axios.create(config)
 export const Api = apiRequestInstance
 
 // Export default instance
-export default apiRequestInstance 
+export default apiRequestInstance

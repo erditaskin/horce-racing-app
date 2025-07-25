@@ -30,7 +30,7 @@
 }
 
 /* Dark theme overrides */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --background: hsl(222.2 84% 4.9%);
   --foreground: hsl(210 40% 98%);
   --primary: hsl(217.2 91.2% 59.8%);
@@ -69,7 +69,9 @@ body {
   font-family: 'Roboto Condensed', system-ui, sans-serif;
   background-color: var(--background);
   color: var(--foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Custom Scrollbar */
@@ -113,13 +115,14 @@ body {
 
 /* Horse Racing Specific Styles */
 .race-track {
-  background: linear-gradient(90deg, 
-    #8B4513 0%, 
-    #A0522D 20%, 
-    #CD853F 40%, 
-    #DEB887 60%, 
-    #F5DEB3 80%, 
-    #8B4513 100%
+  background: linear-gradient(
+    90deg,
+    #8b4513 0%,
+    #a0522d 20%,
+    #cd853f 40%,
+    #deb887 60%,
+    #f5deb3 80%,
+    #8b4513 100%
   );
   border: 3px solid #654321;
   position: relative;
@@ -143,13 +146,7 @@ body {
 }
 
 .finish-line {
-  background: repeating-linear-gradient(
-    45deg,
-    #000,
-    #000 10px,
-    #fff 10px,
-    #fff 20px
-  );
+  background: repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px);
   position: absolute;
   right: 0;
   top: 0;
@@ -234,8 +231,12 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
@@ -244,7 +245,7 @@ body {
     left: 1rem;
     right: 1rem;
   }
-  
+
   .toast {
     min-width: auto;
   }

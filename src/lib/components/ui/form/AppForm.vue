@@ -9,7 +9,7 @@ import { useForm } from 'vee-validate'
 import type { Schema } from 'yup'
 
 defineOptions({
-  name: 'AppForm'
+  name: 'AppForm',
 })
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   validationSchema: undefined,
   initialValues: () => ({}),
-  formClass: 'space-y-6'
+  formClass: 'space-y-6',
 })
 
 // Emits
@@ -35,13 +35,13 @@ const emit = defineEmits<Emits>()
 // Form setup
 const { handleSubmit, resetForm, setErrors } = useForm({
   validationSchema: props.validationSchema,
-  initialValues: props.initialValues
+  initialValues: props.initialValues,
 })
 
 // Expose form methods to parent
 defineExpose({
   resetForm,
-  setErrors
+  setErrors,
 })
 
 // Handle form submission
@@ -52,6 +52,6 @@ const handleFormSubmit = handleSubmit(
   (errors) => {
     const errorMessage = Object.values(errors).join(', ')
     emit('error', errorMessage)
-  }
+  },
 )
-</script> 
+</script>

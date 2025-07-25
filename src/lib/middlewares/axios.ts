@@ -16,7 +16,7 @@ export const setupAxiosInterceptors = () => {
 
       // Set default headers
       const headers: Record<string, string> = {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       }
 
@@ -33,7 +33,7 @@ export const setupAxiosInterceptors = () => {
     (error: AxiosError) => {
       console.error('Request interceptor error:', error)
       return Promise.reject(error)
-    }
+    },
   )
 
   // Response interceptor
@@ -49,7 +49,7 @@ export const setupAxiosInterceptors = () => {
           data: response.data,
         }
       }
-      
+
       return response
     },
     (error: AxiosError) => {
@@ -69,7 +69,7 @@ export const setupAxiosInterceptors = () => {
       }
 
       return Promise.reject(error)
-    }
+    },
   )
 }
 
@@ -79,4 +79,4 @@ export const setupAxiosInterceptors = () => {
  */
 export const initializeAxios = () => {
   setupAxiosInterceptors()
-} 
+}

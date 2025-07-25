@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import AuthenticationBootstrap from './Authentication.vue';
-import ThemeSetup from './ThemeSetup.vue';
+import AuthenticationBootstrap from './Authentication.vue'
+import ThemeSetup from './ThemeSetup.vue'
 
 defineOptions({
-  name: 'AppBootstrap'
+  name: 'AppBootstrap',
 })
-</script> 
+</script>

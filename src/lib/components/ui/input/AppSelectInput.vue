@@ -11,15 +11,11 @@
       errorMessage
         ? 'border-destructive focus:ring-destructive focus:border-destructive'
         : 'border-border focus:ring-ring focus:border-ring hover:border-border/80',
-      disabled && 'opacity-50 cursor-not-allowed bg-muted'
+      disabled && 'opacity-50 cursor-not-allowed bg-muted',
     ]"
   >
     <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
-    <option
-      v-for="option in options"
-      :key="option.value"
-      :value="option.value"
-    >
+    <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.label }}
     </option>
   </select>
@@ -30,7 +26,7 @@ import type { AppOption } from '@/lib/types'
 import { useField } from 'vee-validate'
 
 defineOptions({
-  name: 'AppSelectInput'
+  name: 'AppSelectInput',
 })
 
 interface Props {
@@ -42,8 +38,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: '',
-  disabled: false
+  disabled: false,
 })
 
 const { value, handleChange, handleBlur, errorMessage } = useField(props.name)
-</script> 
+</script>

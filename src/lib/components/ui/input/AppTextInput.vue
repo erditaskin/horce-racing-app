@@ -13,7 +13,7 @@
       errorMessage
         ? 'border-destructive focus:ring-destructive focus:border-destructive'
         : 'border-border focus:ring-ring focus:border-ring hover:border-border/80',
-      disabled && 'opacity-50 cursor-not-allowed bg-muted'
+      disabled && 'opacity-50 cursor-not-allowed bg-muted',
     ]"
   />
 </template>
@@ -22,7 +22,7 @@
 import { useField } from 'vee-validate'
 
 defineOptions({
-  name: 'AppTextInput'
+  name: 'AppTextInput',
 })
 
 interface Props {
@@ -35,8 +35,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   type: 'text',
   placeholder: '',
-  disabled: false
+  disabled: false,
 })
 
 const { value, handleChange, handleBlur, errorMessage } = useField(props.name)
-</script> 
+</script>
