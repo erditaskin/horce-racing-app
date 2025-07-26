@@ -26,6 +26,20 @@
     >
       {{ isSubmitting ? 'Signing in...' : 'Sign In' }}
     </Button>
+
+    <div class="text-center text-sm text-muted-foreground">
+      <div class="mb-2">
+        Don't have an account?
+        <RouterLink to="/auth/register" class="font-medium text-primary hover:underline">
+          Create one here
+        </RouterLink>
+      </div>
+      <div>
+        <RouterLink to="/auth/forgot-password" class="font-medium text-primary hover:underline">
+          Forgot your password?
+        </RouterLink>
+      </div>
+    </div>
   </AppForm>
 </template>
 

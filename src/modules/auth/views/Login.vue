@@ -8,6 +8,7 @@
 </template>
 
 <script setup lang="ts">
+import { useToast } from '@/lib/composables/useToast'
 import LoginForm from '@/modules/auth/components/login/LoginForm.vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -17,6 +18,7 @@ defineOptions({
 
 const router = useRouter()
 const route = useRoute()
+const toast = useToast()
 
 const handleLoginSuccess = () => {
   const redirectPath = (route.query.redirect as string) ?? '/dashboard'
@@ -25,6 +27,6 @@ const handleLoginSuccess = () => {
 
 const handleLoginError = (error: string) => {
   console.error('Login failed:', error)
-  // TODO: Show error message to user (e.g., with a toaster)
+  toast.error(error)
 }
 </script>
