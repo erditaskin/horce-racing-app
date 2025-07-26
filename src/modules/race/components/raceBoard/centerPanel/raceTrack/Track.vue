@@ -1,12 +1,12 @@
 <template>
   <div class="race-track">
-    <div class="lane-numbers">
+    <div class="lane-numbers" :class="pistTypeClass">
       <div v-for="i in 10" :key="i" class="lane-number">
         {{ i }}
       </div>
     </div>
 
-    <div class="track-lanes">
+    <div class="track-lanes" :class="pistTypeClass">
       <Lane
         v-for="(raceHorse, index) in race.selectedHorses"
         :key="raceHorse.horseId"
@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Race, RaceResult } from '../../../../types/'
 import Lane from './Lane.vue'
 import TrackOverlay from './overlay/TrackOverlay.vue'
@@ -50,7 +51,7 @@ interface Props {
   finalResults: RaceResult[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 defineEmits<{
   startRace: []
@@ -59,6 +60,11 @@ defineEmits<{
   resetRace: []
   resumeRace: []
 }>()
+
+// Computed class for pist type styling
+const pistTypeClass = computed(() => {
+  return `pist-${props.race.pistType}`
+})
 </script>
 
 <style scoped>
@@ -75,10 +81,19 @@ defineEmits<{
 
 .lane-numbers {
   width: 60px;
-  background-color: #15803d;
+  background-color: #6b7280;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+.lane-numbers.pist-grass {
+  background-color: #16a34a;
+}
+
+.lane-numbers.pist-sand {
+  background-color: #d97706;
 }
 
 .lane-number {
@@ -99,8 +114,17 @@ defineEmits<{
 .track-lanes {
   flex: 1;
   position: relative;
-  background: linear-gradient(to right, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  background: linear-gradient(to right, #f9fafb 0%, #f3f4f6 50%, #f9fafb 100%);
   overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.track-lanes.pist-grass {
+  background: linear-gradient(to right, #f0fdf4 0%, #dcfce7 50%, #f0fdf4 100%);
+}
+
+.track-lanes.pist-sand {
+  background: linear-gradient(to right, #fffbeb 0%, #fef3c7 50%, #fffbeb 100%);
 }
 
 .finish-line {
