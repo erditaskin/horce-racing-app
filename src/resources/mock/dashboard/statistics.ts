@@ -1,0 +1,65 @@
+import type { DashboardStats, TopPerformer } from '@/modules/dashboard/types'
+
+export const mockDashboardStats: DashboardStats = {
+  totalRaces: 8,
+  completedRaces: 5,
+  pendingRaces: 3,
+  totalHorses: 80,
+  averageRaceTime: 145.67,
+  fastestHorse: 'Sergen',
+  mostWins: 'Turbo',
+  completionRate: 62.5,
+}
+
+export const mockTopPerformers: TopPerformer[] = [
+  {
+    horseId: 'horse-001',
+    horseName: 'Turbo',
+    horseColor: '#3b82f6',
+    wins: 12,
+    totalRaces: 18,
+    averageTime: 142.3,
+    winRate: 66.7,
+    bestTime: 138.45,
+  },
+  {
+    horseId: 'horse-002',
+    horseName: 'Sergen',
+    horseColor: '#f59e0b',
+    wins: 10,
+    totalRaces: 16,
+    averageTime: 143.8,
+    winRate: 62.5,
+    bestTime: 139.12,
+  },
+  {
+    horseId: 'horse-003',
+    horseName: 'Haberbatur',
+    horseColor: '#ef4444',
+    wins: 8,
+    totalRaces: 15,
+    averageTime: 145.2,
+    winRate: 53.3,
+    bestTime: 141.78,
+  },
+  {
+    horseId: 'horse-004',
+    horseName: 'Kafkaslı',
+    horseColor: '#10b981',
+    wins: 7,
+    totalRaces: 14,
+    averageTime: 146.1,
+    winRate: 50.0,
+    bestTime: 142.33,
+  },
+  {
+    horseId: 'horse-005',
+    horseName: 'Lightning',
+    horseColor: '#8b5cf6',
+    wins: 6,
+    totalRaces: 12,
+    averageTime: 147.5,
+    winRate: 50.0,
+    bestTime: 143.89,
+  },
+]
