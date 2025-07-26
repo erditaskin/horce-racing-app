@@ -46,8 +46,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Horse } from '@/modules/horse/types/horse'
 import type { Race, RaceDay, RaceResult } from '../../types/'
+import type { Horse } from '../../types/raceHorse'
 import CenterPanel from './centerPanel/CenterPanel.vue'
 import LeftPanel from './leftPanel/LeftPanel.vue'
 import RightPanel from './rightPanel/RightPanel.vue'

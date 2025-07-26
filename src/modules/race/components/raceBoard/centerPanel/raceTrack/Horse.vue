@@ -107,7 +107,7 @@ defineProps<Props>()
 }
 
 .horse-running .animated-horse {
-  animation: Gallop 0.6s linear infinite;
+  animation: Gallop 0.69s linear infinite;
 }
 
 @keyframes Gallop {
@@ -127,7 +127,7 @@ defineProps<Props>()
   }
 
   .horse-running .animated-horse {
-    animation: SimpleGallop 0.6s linear infinite;
+    animation: SimpleGallop 0.69s linear infinite;
   }
 
   @keyframes SimpleGallop {

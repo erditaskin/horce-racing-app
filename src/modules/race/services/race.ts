@@ -69,7 +69,7 @@ export class RaceService {
           horse: raceHorse.horse,
           position: result.position,
           finishTime: result.finishTime,
-          averageSpeed: result.speed,
+          speed: result.speed,
           roundResults: race.rounds
             .map((round) => round.results?.find((r) => r.horseId === result.horseId))
             .filter(Boolean) as RaceRoundResult[],

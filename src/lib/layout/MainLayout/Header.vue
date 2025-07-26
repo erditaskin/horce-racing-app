@@ -94,10 +94,6 @@ const navigationItems = [
     label: 'Dashboard',
   },
   {
-    path: '/horse/list',
-    label: 'Horses',
-  },
-  {
     path: '/race/board',
     label: 'Races',
   },

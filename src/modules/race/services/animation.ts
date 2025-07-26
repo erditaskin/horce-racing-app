@@ -13,8 +13,8 @@ export class AnimationService {
     roundResults: RaceRoundResult[],
     shouldCancel?: () => boolean,
   ): Promise<void> {
-    // Animation duration in milliseconds (2 seconds per round for faster testing)
-    const animationDuration = 2000
+    // Animation duration in milliseconds (2.3 seconds per round - 15% slower for better viewing)
+    const animationDuration = 2500
 
     // Calculate animation steps (60fps = 50ms per step)
     const steps = animationDuration / 50 // 40 steps over 2 seconds

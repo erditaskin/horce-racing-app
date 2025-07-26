@@ -1,5 +1,5 @@
-import type { Horse } from '@/modules/horse/types/horse'
-import type { RaceDay, RaceDayGenerationOptions } from '../types/'
+import type { RaceDay, RaceDayGenerationOptions } from '../types'
+import type { Horse } from '../types/raceHorse'
 import { MockService } from './mock'
 import { RaceService } from './race'
 

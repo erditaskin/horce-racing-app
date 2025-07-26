@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Horse } from '@/modules/horse/types/horse'
 import type { Race } from '../../../types/'
+import type { Horse } from '../../../types/raceHorse'
 import Controls from './controls/Controls.vue'
 import Roster from './roster/Roster.vue'
 

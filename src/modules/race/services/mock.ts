@@ -1,4 +1,3 @@
-import type { Horse } from '@/modules/horse/types/horse'
 import { MOCK_HORSES } from '@/resources/mock/race/horse'
 import { RACE_NAMES } from '@/resources/mock/race/raceNames'
 import { RACING_VENUES } from '@/resources/mock/race/raceVenues'
@@ -14,6 +13,7 @@ import type {
   RaceVenue,
   RaceVenuePistType,
 } from '../types/'
+import type { Horse } from '../types/raceHorse'
 
 /**
  * Mock Service for Race Data

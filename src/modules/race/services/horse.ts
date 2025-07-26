@@ -1,9 +1,9 @@
-import type { Horse } from '@/modules/horse/types/horse'
+import type { Horse } from '../types/raceHorse'
 import { MockService } from './mock'
 
 /**
  * Horse service for horse-related operations
- * Demonstrates enterprise-level service patterns with API simulation
+ * Uses mock service for development, can be replaced with real API calls
  */
 export class HorseService {
   /**
@@ -17,9 +17,6 @@ export class HorseService {
    * Get horse by ID from API
    */
   static async getHorseById(id: string): Promise<Horse | null> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 200))
-
     const horses = await MockService.getHorses()
     return horses.find((horse) => horse.id === id) ?? null
   }
@@ -28,9 +25,6 @@ export class HorseService {
    * Update horse condition via API
    */
   static async updateHorseCondition(id: string, condition: number): Promise<Horse> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 400))
-
     const horses = await MockService.getHorses()
     const horse = horses.find((h) => h.id === id)
 

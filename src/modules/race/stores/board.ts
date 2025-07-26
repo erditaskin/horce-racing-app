@@ -1,5 +1,4 @@
 import type { AppOption } from '@/lib/types/option'
-import type { Horse } from '@/modules/horse/types/horse'
 import dayjs from 'dayjs'
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
@@ -7,6 +6,7 @@ import { useRouter } from 'vue-router'
 import { HorseService } from '../services/horse'
 import { ProgramService } from '../services/program'
 import type { RaceDay, RaceDayGenerationOptions } from '../types'
+import type { Horse } from '../types/raceHorse'
 
 /**
  * Race Board Store
