@@ -1,87 +1,72 @@
 <template>
   <div class="result-item">
-    <div class="result-position" :class="positionClass">{{ position }}</div>
-
-    <div class="result-horse">
-      <div class="horse-color" :style="{ backgroundColor: horseColor }"></div>
-      <div class="horse-name">{{ horseName }}</div>
+    <div class="col-position">
+      <div class="result-position" :class="positionClass">{{ position }}</div>
     </div>
 
-    <div class="result-time">{{ formatTime(result.finishTime) }}</div>
+    <div class="col-name">
+      <div class="result-horse">
+        <div class="horse-color" :style="{ backgroundColor: horseColor }"></div>
+        <div class="horse-name">{{ horseName }}</div>
+      </div>
+    </div>
+
+    <div class="col-time">{{ formatTime(result.finishTime) }}</div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Race, RaceResult, RoundResult } from '../../../../types/race'
+import type { Race, RaceResult, RaceRoundResult } from '../../../../types/'
+import { formatTime, getPositionClass } from '../../../../utils/formatters'
+import { getHorseColor, getHorseName } from '../../../../utils/horseHelpers'
 
 interface Props {
-  result: RaceResult | RoundResult
+  result: RaceResult | RaceRoundResult
   position: number
   selectedRace?: Race // To get horse info for RoundResult
 }
 
 const props = defineProps<Props>()
 
-const horseColor = computed(() => {
-  if ('horse' in props.result) {
-    return props.result.horse.color
-  }
-  // For RoundResult, find horse in selectedRace
-  if (props.selectedRace) {
-    const horse = props.selectedRace.selectedHorses.find((h) => h.horseId === props.result.horseId)
-    return horse?.horse.color ?? '#ccc'
-  }
-  return '#ccc'
-})
+// Use shared horse helpers instead of local computed properties
+const horseColor = computed(() => getHorseColor(props.result, props.selectedRace))
+const horseName = computed(() => getHorseName(props.result, props.selectedRace))
 
-const horseName = computed(() => {
-  if ('horse' in props.result) {
-    return props.result.horse.name
-  }
-  // For RoundResult, find horse in selectedRace
-  if (props.selectedRace) {
-    const horse = props.selectedRace.selectedHorses.find((h) => h.horseId === props.result.horseId)
-    return horse?.horse.name ?? 'Unknown'
-  }
-  return 'Unknown'
-})
-
-const formatTime = (time: number): string => {
-  // Time is already in seconds, just format it nicely
-  return `${time.toFixed(2)}s`
-}
-
-const positionClass = computed(() => {
-  switch (props.position) {
-    case 1:
-      return 'position-first'
-    case 2:
-      return 'position-second'
-    case 3:
-      return 'position-third'
-    case 4:
-      return 'position-fourth'
-    default:
-      return 'position-other'
-  }
-})
+// Use shared formatters instead of local functions
+const positionClass = computed(() => getPositionClass(props.position))
 </script>
 
 <style scoped>
 .result-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 50px 1fr 80px;
+  gap: 0;
   padding: 8px 12px;
-  background-color: white;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.col-position {
+  display: flex;
+  justify-content: center;
+}
+
+.col-name {
+  padding-left: 8px;
+}
+
+.col-time {
+  text-align: center;
 }
 
 .result-position {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +74,7 @@ const positionClass = computed(() => {
   color: white;
   border-radius: 50%;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 10px;
   flex-shrink: 0;
 }
 
@@ -119,33 +104,25 @@ const positionClass = computed(() => {
 }
 
 .result-horse {
-  flex: 1;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .horse-color {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
   border: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .horse-name {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--foreground);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.result-time {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--foreground);
-  flex-shrink: 0;
 }
 </style>

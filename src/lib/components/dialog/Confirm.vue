@@ -80,14 +80,14 @@ const handleClose = () => {
       leave-from-class="transform scale-100 opacity-100"
       leave-to-class="transform scale-95 opacity-0"
     >
-      <div v-if="isOpen" class="fixed inset-0 z-50 overflow-y-auto" @click="handleClose">
+      <div v-if="isOpen" class="fixed inset-0 z-[100] overflow-y-auto" @click="handleClose">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
 
         <!-- Confirm Dialog -->
         <div class="flex min-h-full items-center justify-center p-4">
           <div
-            class="relative w-full max-w-md bg-card text-card-foreground rounded-lg shadow-xl transform transition-all"
+            class="confirm-dialog relative w-full max-w-md rounded-lg shadow-xl transform transition-all"
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
@@ -127,3 +127,18 @@ const handleClose = () => {
     </Transition>
   </Teleport>
 </template>
+
+<style scoped>
+.confirm-dialog {
+  background-color: white;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+
+/* Dark mode support */
+.dark .confirm-dialog {
+  background-color: #374151;
+  color: #f9fafb;
+  border: 1px solid #4b5563;
+}
+</style>

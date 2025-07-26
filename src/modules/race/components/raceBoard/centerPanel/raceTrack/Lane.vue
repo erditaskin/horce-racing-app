@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RaceHorse } from '../../../../types/race'
+import type { RaceHorse } from '../../../../types/'
 import Horse from './Horse.vue'
 
 defineOptions({

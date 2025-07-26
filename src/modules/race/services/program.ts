@@ -1,12 +1,7 @@
 import type { Horse } from '@/modules/horse/types/horse'
-import type {
-  Race,
-  RaceDay,
-  RaceDayGenerationOptions,
-  RaceResult,
-  RoundResult,
-} from '../types/race'
+import type { RaceDay, RaceDayGenerationOptions } from '../types/'
 import { MockService } from './mock'
+import { RaceService } from './race'
 
 /**
  * Program Service for Race Operations
@@ -27,24 +22,40 @@ export class ProgramService {
   /**
    * Execute a specific race (all 6 rounds)
    */
-  static async executeRace(raceDay: RaceDay, raceIndex: number): Promise<RaceDay> {
+  static async executeRace(
+    raceDay: RaceDay,
+    raceIndex: number,
+    shouldCancel?: () => boolean,
+  ): Promise<RaceDay> {
     const race = raceDay.races[raceIndex]
-
     if (!race) {
       throw new Error(`Race at index ${raceIndex} not found`)
     }
 
+    // Pist availability is already checked in the store before calling this service
+    // Pist status is managed by the store, not here
+
     // Update race status
     race.status = 'running'
     raceDay.currentRaceIndex = raceIndex
-    raceDay.currentRoundIndex = 0
+    // Don't reset currentRoundIndex - keep it for resume functionality
 
-    // Execute all 6 rounds with continuous flow
-    for (let roundIndex = 0; roundIndex < 6; roundIndex++) {
+    // Execute rounds starting from current round index
+    for (let roundIndex = raceDay.currentRoundIndex; roundIndex < 6; roundIndex++) {
+      // Check for cancellation before each round
+      if (shouldCancel && shouldCancel()) {
+        return raceDay
+      }
+
       const round = race.rounds[roundIndex]
 
-      // Execute single round
-      await this.executeRound(race, roundIndex)
+      // Execute single round using RaceService
+      await RaceService.executeRound(race, roundIndex, shouldCancel)
+
+      // Check for cancellation after each round
+      if (shouldCancel && shouldCancel()) {
+        return raceDay
+      }
 
       // Update round status
       round.status = 'completed'
@@ -53,149 +64,29 @@ export class ProgramService {
       // No delay between rounds - horses continue immediately
     }
 
-    // Calculate final results from Round 6
-    race.finalResults = this.calculateFinalResults(race)
-    race.status = 'completed'
-    race.endDate = new Date().toISOString()
+    // Only calculate final results if we actually completed all rounds
+    if (raceDay.currentRoundIndex >= 6) {
+      // Calculate final results using RaceService
+      const finalResults = RaceService.calculateFinalResults(race)
+      race.finalResults = finalResults
+      race.status = 'completed'
+    }
 
+    // Pist status will be managed by the store when race completes
     return raceDay
-  }
-
-  /**
-   * Execute a single round within a race
-   */
-  private static async executeRound(race: Race, roundIndex: number): Promise<void> {
-    const round = race.rounds[roundIndex]
-    round.status = 'running'
-    round.startTime = Date.now()
-
-    // Set initial positions based on previous round results (except for Round 1)
-    if (roundIndex > 0) {
-      const previousRound = race.rounds[roundIndex - 1]
-      if (previousRound.results) {
-        // Sort horses by their previous round finish position
-        const sortedResults = [...previousRound.results].sort((a, b) => a.position - b.position)
-
-        // Update horse positions based on previous round finish order
-        sortedResults.forEach((result, index) => {
-          const raceHorse = race.selectedHorses.find((h) => h.horseId === result.horseId)
-          if (raceHorse) {
-            raceHorse.position = index + 1 // 1st, 2nd, 3rd, etc.
-            raceHorse.progress = 0 // Start from beginning of track
-          }
-        })
-      }
-    } else {
-      // Round 1: Reset all horses to starting positions
-      race.selectedHorses.forEach((horse, index) => {
-        horse.position = index + 1
-        horse.progress = 0
-      })
-    }
-
-    // Simulate horse progress for this round
-    const roundResults = MockService.simulateHorseProgress(race.selectedHorses, round.distance)
-
-    // Animate horses based on their performance
-    await this.animateRound(race, roundResults)
-
-    // Save round results
-    round.results = roundResults
-    round.endTime = Date.now()
-  }
-
-  /**
-   * Animate horses during a round
-   */
-  private static async animateRound(race: Race, roundResults: RoundResult[]): Promise<void> {
-    // Animation duration in milliseconds (3 seconds per round)
-    const animationDuration = 3000
-
-    // Calculate animation steps (60fps = 50ms per step)
-    const steps = animationDuration / 50 // 60 steps over 3 seconds
-
-    for (let step = 0; step <= steps; step++) {
-      const progress = step / steps // 0 to 1
-
-      // Update each horse's progress based on their performance
-      for (const result of roundResults) {
-        const raceHorse = race.selectedHorses.find((h) => h.horseId === result.horseId)
-        if (raceHorse) {
-          // Calculate when this horse should finish (0 to 1)
-          const maxTime = Math.max(...roundResults.map((r) => r.finishTime))
-          const normalizedTime = result.finishTime / maxTime
-
-          // Horse moves continuously until it reaches its finish time
-          if (progress >= normalizedTime) {
-            raceHorse.progress = 100 // Horse has finished
-          } else {
-            // Horse is still running - calculate current progress
-            raceHorse.progress = (progress / normalizedTime) * 100
-          }
-
-          raceHorse.speed = result.speed
-          raceHorse.position = result.position
-        }
-      }
-
-      // Wait for next animation frame
-      await new Promise((resolve) => setTimeout(resolve, 50))
-    }
-
-    // Ensure all horses reach their final positions
-    for (const result of roundResults) {
-      const raceHorse = race.selectedHorses.find((h) => h.horseId === result.horseId)
-      if (raceHorse) {
-        raceHorse.progress = 100 // All horses finish at 100%
-        raceHorse.speed = result.speed
-        raceHorse.position = result.position
-      }
-    }
-  }
-
-  /**
-   * Calculate final results from Round 6
-   */
-  private static calculateFinalResults(race: Race): RaceResult[] {
-    const round6 = race.rounds[5] // Round 6
-    if (!round6.results) {
-      throw new Error('Round 6 results not available')
-    }
-
-    return round6.results
-      .map((result) => {
-        const raceHorse = race.selectedHorses.find((h) => h.horseId === result.horseId)
-        if (!raceHorse) {
-          throw new Error(`Horse ${result.horseId} not found in race`)
-        }
-
-        return {
-          horseId: result.horseId,
-          horse: raceHorse.horse,
-          position: result.position,
-          finishTime: result.finishTime,
-          averageSpeed: result.speed,
-          roundResults: race.rounds
-            .map((round) => round.results?.find((r) => r.horseId === result.horseId))
-            .filter(Boolean) as RoundResult[],
-        }
-      })
-      .sort((a, b) => a.position - b.position)
   }
 
   /**
    * Pause race execution
    */
   static async pauseRace(raceDay: RaceDay): Promise<RaceDay> {
-    const currentRace = raceDay.races[raceDay.currentRaceIndex]
-    if (currentRace) {
-      currentRace.status = 'pending'
-    }
+    // Don't change race status when paused - keep it as 'running'
+    // The pause state is managed by the store, not here
     return raceDay
   }
 
   /**
-   * Reset a specific race
+   * Reset race to initial state
    */
   static async resetRace(raceDay: RaceDay, raceIndex: number): Promise<RaceDay> {
     const race = raceDay.races[raceIndex]
@@ -206,7 +97,7 @@ export class ProgramService {
     // Reset race status
     race.status = 'pending'
     race.finalResults = undefined
-    race.endDate = undefined
+    race.startDate = undefined
 
     // Reset all rounds
     race.rounds.forEach((round) => {
@@ -227,7 +118,7 @@ export class ProgramService {
   }
 
   /**
-   * Get race statistics
+   * Get race statistics using RaceService
    */
   static getRaceStats(raceDay: RaceDay): {
     totalRaces: number
@@ -237,67 +128,6 @@ export class ProgramService {
     fastestHorse: string
     mostWins: string
   } {
-    const completedRaces = raceDay.races.filter((race) => race.status === 'completed')
-
-    return {
-      totalRaces: raceDay.races.length,
-      completedRaces: completedRaces.length,
-      totalHorses: raceDay.races.reduce((sum, race) => sum + race.selectedHorses.length, 0),
-      averageRaceTime:
-        completedRaces.length > 0
-          ? completedRaces.reduce((sum, race) => {
-              const round6 = race.rounds[5]
-              return sum + (round6.results?.[0]?.finishTime || 0)
-            }, 0) / completedRaces.length
-          : 0,
-      fastestHorse: this.getFastestHorse(raceDay),
-      mostWins: this.getMostWins(raceDay),
-    }
-  }
-
-  /**
-   * Get fastest horse across all races
-   */
-  private static getFastestHorse(raceDay: RaceDay): string {
-    let fastestHorse = ''
-    let fastestTime = Infinity
-
-    raceDay.races.forEach((race) => {
-      if (race.finalResults && race.finalResults.length > 0) {
-        const winner = race.finalResults[0]
-        if (winner.finishTime < fastestTime) {
-          fastestTime = winner.finishTime
-          fastestHorse = winner.horse.name
-        }
-      }
-    })
-
-    return fastestHorse
-  }
-
-  /**
-   * Get horse with most wins
-   */
-  private static getMostWins(raceDay: RaceDay): string {
-    const wins: Record<string, number> = {}
-
-    raceDay.races.forEach((race) => {
-      if (race.finalResults && race.finalResults.length > 0) {
-        const winner = race.finalResults[0]
-        wins[winner.horse.name] = (wins[winner.horse.name] || 0) + 1
-      }
-    })
-
-    let mostWins = ''
-    let maxWins = 0
-
-    Object.entries(wins).forEach(([horse, winCount]) => {
-      if (winCount > maxWins) {
-        maxWins = winCount
-        mostWins = horse
-      }
-    })
-
-    return mostWins
+    return RaceService.getRaceStats(raceDay)
   }
 }

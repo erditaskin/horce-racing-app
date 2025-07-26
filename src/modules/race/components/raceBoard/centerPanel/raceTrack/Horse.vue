@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RaceHorse } from '../../../../types/race'
+import type { RaceHorse } from '../../../../types/'
 
 defineOptions({
   name: 'RaceHorseMarker',

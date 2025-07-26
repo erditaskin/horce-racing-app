@@ -54,19 +54,3 @@ export const RACE_NAMES = [
   'Coronation Stakes',
   'Commonwealth Handicap',
 ] as const
-
-/**
- * Get a random race name
- */
-export const getRandomRaceName = (): string => {
-  const randomIndex = Math.floor(Math.random() * RACE_NAMES.length)
-  return RACE_NAMES[randomIndex]
-}
-
-/**
- * Get multiple random race names (unique)
- */
-export const getRandomRaceNames = (count: number): string[] => {
-  const shuffled = [...RACE_NAMES].sort(() => 0.5 - Math.random())
-  return shuffled.slice(0, count)
-}

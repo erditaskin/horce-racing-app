@@ -1,10 +1,5 @@
 <template>
   <div class="right-panel">
-    <!-- Date Selector -->
-    <div class="date-section">
-      <DaySelector :selected-date="selectedDate" @select-date="$emit('selectDate', $event)" />
-    </div>
-
     <!-- Program -->
     <div class="program-section">
       <Program
@@ -26,8 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RaceDay } from '../../../types/race'
-import DaySelector from './daySelector/DaySelector.vue'
+import type { RaceDay } from '../../../types/'
 import Program from './program/Program.vue'
 import Results from './results/Results.vue'
 
@@ -35,14 +29,12 @@ interface Props {
   raceDay: RaceDay | null
   selectedRaceIndex: number
   currentRoundIndex: number
-  selectedDate: string
 }
 
 defineProps<Props>()
 
 defineEmits<{
   selectRace: [index: number]
-  selectDate: [date: string]
 }>()
 </script>
 
@@ -55,13 +47,6 @@ defineEmits<{
   flex-direction: column;
   flex-shrink: 0;
   overflow-x: hidden;
-}
-
-.date-section {
-  flex-shrink: 0;
-  padding: 16px 16px 0 16px;
-  background-color: #e5e7eb;
-  border-bottom: 1px solid var(--border);
 }
 
 .round-section {

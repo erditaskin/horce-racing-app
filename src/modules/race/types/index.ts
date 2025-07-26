@@ -1,9 +1,7 @@
-export type {
-  Race,
-  RaceDay,
-  RaceDayGenerationOptions,
-  RaceDayStats,
-  RaceExecutionOptions,
-  RaceHorse,
-  RaceResult,
-} from './race'
+export * from './race'
+export * from './raceDay'
+export * from './raceHorse'
+export * from './raceProgram'
+export * from './raceResult'
+export * from './raceRound'
+export * from './raceVenue'

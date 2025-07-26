@@ -53,8 +53,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
       themeMode.value = initialThemeMode
       preferences.value = initialPreferences
-
-      console.log('Theme settings initialized successfully')
     } catch (error) {
       console.error('Failed to initialize theme settings:', error)
       throw error

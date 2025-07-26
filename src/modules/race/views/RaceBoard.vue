@@ -6,6 +6,7 @@ import RaceBoard from '../components/raceBoard/index.vue'
 import { useRaceBoardStore } from '../stores/board'
 
 const toast = useToast()
+// Removed unused confirm variable
 const store = useRaceBoardStore()
 
 // Use storeToRefs to maintain reactivity while destructuring
@@ -18,6 +19,11 @@ const {
   selectedDate,
   isRunning,
   canStart,
+  isPaused,
+  currentOverlayState,
+  finalResults,
+  pistStatus,
+  isSelectedRacePaused,
 } = storeToRefs(store)
 
 // Methods
@@ -35,6 +41,46 @@ const setSelectedRaceIndex = (index: number) => {
 
 const selectDate = async (date: string) => {
   await store.selectDate(date)
+}
+
+const handleStartRace = () => {
+  // Prevent multiple race starts
+  if (isRunning.value && !isPaused.value) {
+    return
+  }
+
+  if (currentOverlayState.value === 'pre-race') {
+    // Start the race immediately
+    store.startRaceDay()
+  }
+}
+
+const handleStartRaceDirect = async () => {
+  // Add a small delay to ensure UI state is updated
+  await new Promise((resolve) => setTimeout(resolve, 100))
+
+  // Check if pist is available before starting
+  if (selectedRace.value && !store.isPistAvailable(selectedRace.value.pistType)) {
+    toast.warning(
+      `${selectedRace.value.pistType.charAt(0).toUpperCase() + selectedRace.value.pistType.slice(1)} pist is currently in use. Please wait for the current race to finish.`,
+    )
+    return
+  }
+
+  // Start the race directly from the overlay
+  await store.startRaceDay()
+}
+
+const handleCloseOverlay = () => {
+  // No longer needed - overlay state is managed by race status
+}
+
+const handleResetRace = async () => {
+  await store.resetRaceDay()
+}
+
+const handleResumeRace = async () => {
+  await store.startRaceDay()
 }
 
 // Initialize on mount
@@ -59,10 +105,20 @@ onMounted(async () => {
       :selected-date="selectedDate"
       :is-running="isRunning"
       :can-start="canStart"
+      :is-paused="isPaused"
+      :overlay-state="currentOverlayState"
+      :final-results="finalResults"
+      :pist-status="pistStatus"
+      :is-selected-race-paused="isSelectedRacePaused"
       @start="startRaceDay"
       @reset="resetRace"
       @select-race="setSelectedRaceIndex"
       @select-date="selectDate"
+      @start-race="handleStartRace"
+      @start-race-direct="handleStartRaceDirect"
+      @close-overlay="handleCloseOverlay"
+      @reset-race="handleResetRace"
+      @resume-race="handleResumeRace"
     />
   </div>
 </template>

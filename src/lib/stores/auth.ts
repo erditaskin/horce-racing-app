@@ -75,8 +75,6 @@ export const useAuthStore = defineStore('auth', () => {
           // Update store state and localStorage
           user.value = storedUser
           AuthCoreService.saveUser(storedUser)
-
-          console.log('Authentication initialized successfully')
         }
       } catch (error) {
         console.error('Failed to initialize auth state:', error)

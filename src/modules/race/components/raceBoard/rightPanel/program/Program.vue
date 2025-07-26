@@ -12,7 +12,7 @@
           :race="race"
           :race-index="index"
           :is-selected="index === selectedRaceIndex"
-          :is-current="index === raceDay.currentRaceIndex"
+          :is-current="raceDay.currentRaceIndex >= 0 && index === raceDay.currentRaceIndex"
           @select-race="$emit('selectRace', $event)"
         />
       </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RaceDay } from '../../../../types/race'
+import type { RaceDay } from '../../../../types/'
 import ProgramItem from './ProgramItem.vue'
 
 defineOptions({

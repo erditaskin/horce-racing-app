@@ -17,12 +17,27 @@
     </div>
 
     <div class="finish-line">FINISH</div>
+
+    <!-- Track Overlay -->
+    <TrackOverlay
+      :overlay-state="overlayState"
+      :race-number="race.raceNumber"
+      :race-name="race.name"
+      :final-results="finalResults"
+      :pist-type="race.pistType"
+      @start-race="$emit('startRace')"
+      @start-race-direct="$emit('startRaceDirect')"
+      @close-overlay="$emit('closeOverlay')"
+      @reset-race="$emit('resetRace')"
+      @resume-race="$emit('resumeRace')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Race } from '../../../../types/race'
+import type { Race, RaceResult } from '../../../../types/'
 import Lane from './Lane.vue'
+import TrackOverlay from './overlay/TrackOverlay.vue'
 
 defineOptions({
   name: 'RaceTrack',
@@ -31,9 +46,19 @@ defineOptions({
 interface Props {
   race: Race
   isRunning: boolean
+  overlayState: 'pre-race' | 'countdown' | 'running' | 'post-race' | 'paused' | null
+  finalResults: RaceResult[]
 }
 
 defineProps<Props>()
+
+defineEmits<{
+  startRace: []
+  startRaceDirect: []
+  closeOverlay: []
+  resetRace: []
+  resumeRace: []
+}>()
 </script>
 
 <style scoped>

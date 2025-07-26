@@ -1,14 +1,19 @@
 import type { Horse } from '@/modules/horse/types/horse'
 import { MOCK_HORSES } from '@/resources/mock/race/horse'
-import { getRandomRaceNames } from '@/resources/mock/race/names'
+import { RACE_NAMES } from '@/resources/mock/race/raceNames'
+import { RACING_VENUES } from '@/resources/mock/race/raceVenues'
 import type {
   Race,
   RaceDay,
   RaceDayGenerationOptions,
+  RaceDayWeather,
   RaceHorse,
+  RacePistStatus,
   RaceRound,
-  RoundResult,
-} from '../types/race'
+  RaceRoundResult,
+  RaceVenue,
+  RaceVenuePistType,
+} from '../types/'
 
 /**
  * Mock Service for Race Data
@@ -35,15 +40,31 @@ export class MockService {
     // Generate random number of races (7-11)
     const raceCount = Math.floor(Math.random() * (maxRaces - minRaces + 1)) + minRaces
 
-    // Get unique race names
-    const raceNames = getRandomRaceNames(raceCount)
+    // Generate venue for this race day
+    const venue = MockService.generateVenue()
 
-    // Generate races
+    // Get unique race names
+    const raceNames = MockService.getRandomRaceNames(raceCount)
+
+    // Generate races with balanced pist type assignment
     const races: Race[] = []
     let currentTime = startTime
 
+    // Create balanced pist type distribution
+    const pistTypeDistribution = MockService.createBalancedPistDistribution(
+      raceCount,
+      venue.pistTypes,
+    )
+
     for (let i = 0; i < raceCount; i++) {
-      const race = this.generateRace(horses, i + 1, raceNames[i], currentTime, date)
+      const race = this.generateRace(
+        horses,
+        i + 1,
+        raceNames[i],
+        currentTime,
+        date,
+        pistTypeDistribution[i],
+      )
       races.push(race)
 
       // Calculate next start time
@@ -52,10 +73,13 @@ export class MockService {
 
     return {
       date,
+      weather: MockService.getRandomWeather(),
+      venue,
       races,
       status: 'generated',
-      currentRaceIndex: 0,
+      currentRaceIndex: -1, // No race is currently running
       currentRoundIndex: 0,
+      pistStatus: MockService.getInitialPistStatus(),
     }
   }
 
@@ -68,6 +92,8 @@ export class MockService {
     raceName: string,
     startTime: string,
     date: string,
+    // venue: RaceVenue, // Unused parameter
+    pistType: RaceVenuePistType,
   ): Race {
     // Select 10 random horses for this race
     const selectedHorses = this.selectRandomHorses(horses, 10)
@@ -97,6 +123,7 @@ export class MockService {
       name: raceName,
       raceNumber,
       startTime,
+      pistType,
       rounds,
       selectedHorses: raceHorses,
       status: 'pending',
@@ -126,7 +153,7 @@ export class MockService {
   /**
    * Simulate horse progress for a round
    */
-  static simulateHorseProgress(horses: RaceHorse[], distance: number): RoundResult[] {
+  static simulateHorseProgress(horses: RaceHorse[], distance: number): RaceRoundResult[] {
     const results = horses
       .map((raceHorse) => {
         // Calculate horse performance based on condition and distance
@@ -172,4 +199,131 @@ export class MockService {
       }, 500) // Simulate API delay
     })
   }
+
+  /**
+   * Get a random race name
+   */
+  static getRandomRaceName(): string {
+    const randomIndex = Math.floor(Math.random() * RACE_NAMES.length)
+    return RACE_NAMES[randomIndex]
+  }
+
+  /**
+   * Get multiple random race names (unique)
+   */
+  static getRandomRaceNames(count: number): string[] {
+    const shuffled = [...RACE_NAMES].sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, count)
+  }
+
+  /**
+   * Get a random weather condition
+   */
+  static getRandomWeather(): RaceDayWeather {
+    const weatherOptions: RaceDayWeather[] = ['sunny', 'foggy', 'rainy', 'snowy', 'cloudy', 'windy']
+    const randomIndex = Math.floor(Math.random() * weatherOptions.length)
+    return weatherOptions[randomIndex]
+  }
+
+  /**
+   * Generate a venue for the race day
+   */
+  private static generateVenue(): RaceVenue {
+    const venueName = MockService.getRandomVenue()
+    const pistTypes = MockService.getRandomPistTypes()
+
+    return {
+      name: venueName,
+      location: MockService.getVenueLocation(),
+      capacity: Math.floor(Math.random() * 50000) + 10000, // 10k-60k capacity
+      pistTypes,
+    }
+  }
+
+  /**
+   * Get random venue name (ensuring uniqueness)
+   */
+  private static getRandomVenue(): string {
+    // For now, just pick a random venue
+    // In a real system, we'd track used venues to ensure uniqueness
+    const randomIndex = Math.floor(Math.random() * RACING_VENUES.length)
+    return RACING_VENUES[randomIndex]
+  }
+
+  /**
+   * Get venue location based on venue name
+   */
+  private static getVenueLocation(): string {
+    return 'International'
+  }
+
+  /**
+   * Get random pist types for venue (prefer 2 pist types for better variety)
+   */
+  private static getRandomPistTypes(): RaceVenuePistType[] {
+    const pistTypes: RaceVenuePistType[] = ['grass', 'sand']
+    const numPists = Math.random() > 0.3 ? 2 : 1 // 70% chance of having 2 pist types for better variety
+
+    if (numPists === 1) {
+      // Randomly select one pist type
+      return [pistTypes[Math.floor(Math.random() * 2)]]
+    }
+
+    // Return both pist types
+    return pistTypes
+  }
+
+  /**
+   * Create a balanced distribution of pist types for races
+   * Ensures at least 20% of each available pist type
+   */
+  private static createBalancedPistDistribution(
+    raceCount: number,
+    availablePistTypes: RaceVenuePistType[],
+  ): RaceVenuePistType[] {
+    const distribution: RaceVenuePistType[] = []
+
+    // If only one pist type available, use it for all races
+    if (availablePistTypes.length === 1) {
+      return new Array(raceCount).fill(availablePistTypes[0])
+    }
+
+    // For multiple pist types, ensure balanced distribution
+    const minRacesPerPist = Math.max(1, Math.floor(raceCount * 0.2)) // At least 20% of each pist type, minimum 1
+    const remainingRaces = raceCount - minRacesPerPist * availablePistTypes.length
+
+    // First, assign minimum races to each pist type
+    availablePistTypes.forEach((pistType) => {
+      for (let i = 0; i < minRacesPerPist; i++) {
+        distribution.push(pistType)
+      }
+    })
+
+    // Then distribute remaining races evenly
+    for (let i = 0; i < remainingRaces; i++) {
+      const pistType = availablePistTypes[i % availablePistTypes.length]
+      distribution.push(pistType)
+    }
+
+    // Shuffle the distribution to avoid predictable patterns
+    return distribution.sort(() => 0.5 - Math.random())
+  }
+
+  /**
+   * Get initial pist status (both available)
+   */
+  private static getInitialPistStatus(): RacePistStatus {
+    return {
+      grass: {
+        isAvailable: true,
+        currentRaceId: undefined,
+      },
+      sand: {
+        isAvailable: true,
+        currentRaceId: undefined,
+      },
+    }
+  }
+
+  // Removed unused assignPistType function
 }

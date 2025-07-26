@@ -9,10 +9,26 @@
               : 'No Race Selected'
           }}
         </span>
-        <span v-if="selectedRace" class="start-time"> Start: {{ selectedRace.startTime }} </span>
+        <div v-if="selectedRace" class="race-details">
+          <span class="start-time">Start: {{ selectedRace.startTime }}</span>
+          <div class="pist-indicator" :class="pistTypeClass">
+            <span class="pist-name">{{ pistTypeDisplay }} Pist</span>
+          </div>
+        </div>
       </div>
 
-      <Track v-if="selectedRace" :race="selectedRace" :is-running="isRunning" />
+      <Track
+        v-if="selectedRace"
+        :race="selectedRace"
+        :is-running="isRunning"
+        :overlay-state="overlayState"
+        :final-results="finalResults"
+        @start-race="$emit('startRace')"
+        @start-race-direct="$emit('startRaceDirect')"
+        @close-overlay="$emit('closeOverlay')"
+        @reset-race="$emit('resetRace')"
+        @resume-race="$emit('resumeRace')"
+      />
 
       <div v-else class="no-race">
         <p>Select a race to view the track</p>
@@ -22,15 +38,37 @@
 </template>
 
 <script setup lang="ts">
-import type { Race } from '../../../types/race'
+import { computed } from 'vue'
+import type { Race, RaceResult } from '../../../types/'
 import Track from './raceTrack/Track.vue'
 
 interface Props {
   selectedRace: Race | null
   isRunning: boolean
+  overlayState: 'pre-race' | 'countdown' | 'running' | 'post-race' | 'paused' | null
+  finalResults: RaceResult[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+defineEmits<{
+  startRace: []
+  startRaceDirect: []
+  closeOverlay: []
+  resetRace: []
+  resumeRace: []
+}>()
+
+// Computed properties for pist type display
+const pistTypeClass = computed(() => {
+  if (!props.selectedRace) return ''
+  return props.selectedRace.pistType === 'grass' ? 'pist-grass' : 'pist-sand'
+})
+
+const pistTypeDisplay = computed(() => {
+  if (!props.selectedRace) return ''
+  return props.selectedRace.pistType.charAt(0).toUpperCase() + props.selectedRace.pistType.slice(1)
+})
 </script>
 
 <style scoped>
@@ -64,9 +102,38 @@ defineProps<Props>()
   color: var(--foreground);
 }
 
+.race-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .start-time {
   font-size: 14px;
   color: var(--muted-foreground);
+}
+
+.pist-indicator {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.pist-grass {
+  background-color: #22c55e; /* Green */
+}
+
+.pist-sand {
+  background-color: #f59e0b; /* Sand/Orange */
+}
+
+.pist-name {
+  font-size: 11px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .no-race {

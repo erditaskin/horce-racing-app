@@ -5,6 +5,10 @@
       <Controls
         :can-start="canStart"
         :is-running="isRunning"
+        :is-paused="isPaused"
+        :selected-race="selectedRace"
+        :pist-status="pistStatus"
+        :is-selected-race-paused="isSelectedRacePaused"
         @start="$emit('start')"
         @reset="$emit('reset')"
       />
@@ -19,6 +23,7 @@
 
 <script setup lang="ts">
 import type { Horse } from '@/modules/horse/types/horse'
+import type { Race } from '../../../types/'
 import Controls from './controls/Controls.vue'
 import Roster from './roster/Roster.vue'
 
@@ -26,6 +31,13 @@ interface Props {
   horses: Horse[]
   canStart: boolean
   isRunning: boolean
+  isPaused?: boolean
+  selectedRace?: Race | null
+  pistStatus?: {
+    grass: { isAvailable: boolean; currentRaceId?: string }
+    sand: { isAvailable: boolean; currentRaceId?: string }
+  } | null
+  isSelectedRacePaused?: boolean
 }
 
 defineProps<Props>()
