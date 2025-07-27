@@ -31,8 +31,10 @@ test.describe('Race Board E2E Tests', () => {
     
     // Debug: Check current URL and page content
     console.log('Current URL:', page.url())
+    await page.waitForLoadState('domcontentloaded')
     const pageContent = await page.content()
     console.log('Page contains "race-board":', pageContent.includes('race-board'))
+    console.log('Page contains "data-testid":', pageContent.includes('data-testid'))
   })
 
   test('should load race board successfully', async ({ page }) => {
@@ -129,7 +131,8 @@ test.describe('Race Board E2E Tests', () => {
     await page.click('[data-testid="reset-race"]')
     
     // Handle confirmation modal
-    await expect(page.locator('text=Reset Race')).toBeVisible({ timeout: 5000 })
+    await expect(page.locator('#confirm-title')).toBeVisible({ timeout: 5000 })
+    await expect(page.locator('#confirm-title')).toHaveText('Reset Race')
     
     // Debug: Check what buttons are available in the modal
     const modalButtons = await page.locator('.confirm-dialog button').all()
@@ -213,7 +216,10 @@ test.describe('Race Board E2E Tests', () => {
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
     await page.click('[data-testid="start-race"]')
     
-    // Wait for round progression
+    // Wait for race to complete and results to be generated
+    await expect(page.locator('[data-testid="race-results"]').first()).toBeVisible({ timeout: 60000 })
+    
+    // Now check for round progression elements
     await expect(page.locator('[data-testid="round-progress"]')).toBeVisible({ timeout: 10000 })
     
     // Verify round information is displayed
