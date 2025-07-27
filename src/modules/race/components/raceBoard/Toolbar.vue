@@ -16,16 +16,6 @@
         <span class="weather-text">{{ raceDay.weather }}</span>
       </div>
 
-      <Button
-        v-if="!raceDay"
-        variant="primary"
-        size="sm"
-        @click="$emit('generateRaceDay')"
-        data-testid="generate-race-day"
-      >
-        Generate Race Day
-      </Button>
-
       <AppDatePicker
         name="race-day"
         :model-value="selectedDate"
@@ -37,7 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/lib/components/ui/Button.vue'
 import AppDatePicker from '@/lib/components/ui/input/AppDatePicker.vue'
 import type { RaceDay } from '../../types/'
 
@@ -54,7 +43,6 @@ defineProps<Props>()
 
 defineEmits<{
   selectDate: [date: string]
-  generateRaceDay: []
 }>()
 
 /**

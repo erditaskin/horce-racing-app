@@ -13,13 +13,13 @@ import process from 'node:process'
 export default defineConfig({
   testDir: './e2e',
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: 30 * 1000, // Reduced from 60s to 30s for mock data
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 10000,
+    timeout: 5000, // Reduced from 10s to 5s for mock data
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -107,6 +107,6 @@ export default defineConfig({
     command: process.env.CI ? 'yarn preview' : 'yarn dev',
     port: process.env.CI ? 4173 : 5173,
     reuseExistingServer: false,
-    timeout: 120 * 1000,
+    timeout: 60 * 1000, // Reduced from 120s to 60s
   },
 })
