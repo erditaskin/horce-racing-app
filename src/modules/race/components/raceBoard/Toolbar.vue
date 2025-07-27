@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar">
+  <div class="toolbar" data-testid="race-toolbar">
     <div class="toolbar-left">
       <div v-if="raceDay?.venue" class="venue-info">
         <h2 class="venue-name">{{ raceDay.venue.name }}</h2>
@@ -16,6 +16,16 @@
         <span class="weather-text">{{ raceDay.weather }}</span>
       </div>
 
+      <Button
+        v-if="!raceDay"
+        variant="primary"
+        size="sm"
+        @click="$emit('generateRaceDay')"
+        data-testid="generate-race-day"
+      >
+        Generate Race Day
+      </Button>
+
       <AppDatePicker
         name="race-day"
         :model-value="selectedDate"
@@ -27,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import Button from '@/lib/components/ui/Button.vue'
 import AppDatePicker from '@/lib/components/ui/input/AppDatePicker.vue'
 import type { RaceDay } from '../../types/'
 
@@ -43,6 +54,7 @@ defineProps<Props>()
 
 defineEmits<{
   selectDate: [date: string]
+  generateRaceDay: []
 }>()
 
 /**

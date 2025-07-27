@@ -1,11 +1,11 @@
 <template>
-  <div class="program">
+  <div class="program" data-testid="race-program">
     <div class="program-header">
       <h3 class="program-title">Race Program</h3>
     </div>
 
     <div class="program-content">
-      <div v-if="raceDay" class="program-list">
+      <div v-if="raceDay" class="program-list" data-testid="race-day-generated">
         <ProgramItem
           v-for="(race, index) in raceDay.races"
           :key="race.id"

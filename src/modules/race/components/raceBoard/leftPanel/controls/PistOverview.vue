@@ -1,15 +1,15 @@
 <template>
-  <div class="pist-overview">
+  <div class="pist-overview" data-testid="pist-status">
     <h4 class="pist-overview-title">Pist Status</h4>
     <div class="pist-list">
-      <div class="pist-item" :class="pistStatusClass('grass')">
+      <div class="pist-item" :class="pistStatusClass('grass')" data-testid="grass-pist">
         <div class="pist-indicator pist-grass"></div>
         <span class="pist-name">Grass Pist</span>
         <span class="pist-status" :class="statusClass('grass')">
           {{ getStatusText('grass') }}
         </span>
       </div>
-      <div class="pist-item" :class="pistStatusClass('sand')">
+      <div class="pist-item" :class="pistStatusClass('sand')" data-testid="sand-pist">
         <div class="pist-indicator pist-sand"></div>
         <span class="pist-name">Sand Pist</span>
         <span class="pist-status" :class="statusClass('sand')">

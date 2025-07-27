@@ -1,11 +1,11 @@
 <template>
-  <div class="overlay-content post-race">
+  <div class="overlay-content post-race" data-testid="race-completed">
     <div class="overlay-header">
       <h2 class="overlay-title">Race {{ raceNumber }} - Final Results</h2>
       <p class="overlay-subtitle">{{ raceName }}</p>
     </div>
 
-    <div class="final-results">
+    <div class="final-results" data-testid="final-results">
       <div class="results-header">
         <span class="header-pos">Pos</span>
         <span class="header-name">Name</span>

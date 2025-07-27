@@ -1,10 +1,11 @@
 <template>
-  <div class="race-board">
+  <div class="race-board" data-testid="race-board">
     <!-- Toolbar -->
     <Toolbar
       :selected-date="selectedDate"
       :race-day="raceDay"
       @select-date="$emit('selectDate', $event)"
+      @generate-race-day="$emit('generateRaceDay')"
     />
 
     <div class="board-layout">
@@ -88,6 +89,7 @@ defineEmits<{
   closeOverlay: []
   resetRace: []
   resumeRace: []
+  generateRaceDay: []
 }>()
 </script>
 

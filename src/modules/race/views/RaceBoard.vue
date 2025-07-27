@@ -43,6 +43,10 @@ const selectDate = async (date: string) => {
   await store.selectDate(date)
 }
 
+const generateRaceDay = async () => {
+  await store.generateRaceDay()
+}
+
 const handleStartRace = () => {
   // Prevent multiple race starts
   if (isRunning.value && !isPaused.value) {
@@ -114,6 +118,7 @@ onMounted(async () => {
       @reset="resetRace"
       @select-race="setSelectedRaceIndex"
       @select-date="selectDate"
+      @generate-race-day="generateRaceDay"
       @start-race="handleStartRace"
       @start-race-direct="handleStartRaceDirect"
       @close-overlay="handleCloseOverlay"

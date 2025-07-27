@@ -1,10 +1,16 @@
 <template>
-  <div class="overlay-content pre-race">
+  <div class="overlay-content pre-race" data-testid="race-pending">
     <div class="overlay-message">
       <h2 class="overlay-title">Horses are at the starter's command</h2>
       <p class="overlay-subtitle">Race is waiting to be started</p>
     </div>
-    <Button @click="$emit('start-race-direct')" variant="primary" size="lg" class="start-button">
+    <Button
+      @click="$emit('start-race-direct')"
+      variant="primary"
+      size="lg"
+      class="start-button"
+      data-testid="start-race"
+    >
       Start Race
     </Button>
   </div>

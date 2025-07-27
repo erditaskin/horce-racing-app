@@ -12,10 +12,17 @@
     <div class="results-content">
       <div v-if="raceDay && selectedRace" class="results-list">
         <!-- Show all completed rounds and current running round -->
-        <div v-for="roundIndex in visibleRounds" :key="roundIndex" class="round-section">
+        <div
+          v-for="roundIndex in visibleRounds"
+          :key="roundIndex"
+          class="round-section"
+          data-testid="round-progress"
+        >
           <div class="round-header">
-            <h4 class="round-title">
-              Round {{ roundIndex + 1 }} ({{ getRoundDistance(roundIndex) }}m)
+            <h4 class="round-title" data-testid="current-round">
+              Round {{ roundIndex + 1 }} (<span data-testid="round-distance"
+                >{{ getRoundDistance(roundIndex) }}m</span
+              >)
             </h4>
           </div>
 
@@ -25,7 +32,11 @@
           </div>
 
           <!-- Round completed - show results -->
-          <div v-else-if="getRoundResults(roundIndex).length > 0" class="round-results">
+          <div
+            v-else-if="getRoundResults(roundIndex).length > 0"
+            class="round-results"
+            data-testid="race-results"
+          >
             <!-- Column headers -->
             <div class="results-header-row">
               <div class="col-position">Pos</div>

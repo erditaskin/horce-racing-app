@@ -7,12 +7,24 @@
     <!-- Pist Overview -->
     <PistOverview :pist-status="pistStatus" />
 
-    <div class="controls-buttons">
-      <Button variant="primary" size="sm" :disabled="!canStartOrPause" @click="handleStart">
+    <div class="controls-buttons" data-testid="race-controls">
+      <Button
+        variant="primary"
+        size="sm"
+        :disabled="!canStartOrPause"
+        @click="handleStart"
+        :data-testid="getButtonText().toLowerCase().replace(' ', '-')"
+      >
         {{ getButtonText() }}
       </Button>
 
-      <Button variant="secondary" size="sm" :disabled="!canReset" @click="handleResetClick">
+      <Button
+        variant="secondary"
+        size="sm"
+        :disabled="!canReset"
+        @click="handleResetClick"
+        data-testid="reset-race"
+      >
         Reset
       </Button>
     </div>

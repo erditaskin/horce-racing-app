@@ -1,12 +1,16 @@
 <template>
-  <div class="race-track">
+  <div class="race-track" data-testid="race-track">
     <div class="lane-numbers" :class="pistTypeClass">
       <div v-for="i in 10" :key="i" class="lane-number">
         {{ i }}
       </div>
     </div>
 
-    <div class="track-lanes" :class="pistTypeClass">
+    <div
+      class="track-lanes"
+      :class="pistTypeClass"
+      :data-testid="isRunning ? 'race-running' : 'race-not-running'"
+    >
       <Lane
         v-for="(raceHorse, index) in race.selectedHorses"
         :key="raceHorse.horseId"

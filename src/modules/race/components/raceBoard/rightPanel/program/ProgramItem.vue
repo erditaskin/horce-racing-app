@@ -8,8 +8,11 @@
       'in-progress': props.race.status === 'running',
       'pist-grass': props.race.pistType === 'grass',
       'pist-sand': props.race.pistType === 'sand',
+      'selected-race': props.isSelected,
     }"
     @click="$emit('selectRace', props.raceIndex)"
+    :data-testid="`race-${props.race.raceNumber}`"
+    :data-selected="props.isSelected ? 'selected-race-' + props.race.raceNumber : null"
   >
     <div class="race-header">
       <div class="race-number">Race {{ props.race.raceNumber }}</div>

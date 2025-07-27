@@ -1,5 +1,5 @@
 <template>
-  <div class="roster">
+  <div class="roster" data-testid="horse-list">
     <div class="roster-header">
       <h3 class="roster-title">Horse Pool ({{ horses.length }})</h3>
     </div>
@@ -13,7 +13,12 @@
         </div>
 
         <div class="table-body">
-          <RosterItem v-for="horse in horses" :key="horse.id" :horse="horse" />
+          <RosterItem
+            v-for="horse in horses"
+            :key="horse.id"
+            :horse="horse"
+            data-testid="horse-item"
+          />
         </div>
       </div>
     </div>

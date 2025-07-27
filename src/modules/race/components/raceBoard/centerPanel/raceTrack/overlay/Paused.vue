@@ -1,5 +1,5 @@
 <template>
-  <div class="paused-overlay">
+  <div class="paused-overlay" data-testid="race-paused">
     <!-- Backdrop -->
     <div class="paused-backdrop"></div>
 
@@ -23,7 +23,9 @@
 
       <!-- Actions -->
       <div class="paused-actions">
-        <Button variant="primary" size="lg" @click="$emit('resume-race')"> Resume Race </Button>
+        <Button variant="primary" size="lg" @click="$emit('resume-race')" data-testid="resume-race">
+          Resume Race
+        </Button>
       </div>
     </div>
   </div>

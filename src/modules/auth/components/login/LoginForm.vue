@@ -1,11 +1,17 @@
 <template>
-  <AppForm :validation-schema="loginSchema" @submit="handleFormSubmit" @error="handleFormError">
+  <AppForm
+    data-testid="login-form"
+    :validation-schema="loginSchema"
+    @submit="handleFormSubmit"
+    @error="handleFormError"
+  >
     <AppFormField
       name="email"
       label="Email"
       fieldType="email"
       placeholder="Enter your email"
       required
+      data-testid="email-input"
     />
 
     <AppFormField
@@ -14,6 +20,7 @@
       fieldType="password"
       placeholder="Enter your password"
       required
+      data-testid="password-input"
     />
 
     <Button
@@ -23,6 +30,7 @@
       :loading="isSubmitting"
       :disabled="isSubmitting"
       class="w-full"
+      data-testid="login-button"
     >
       {{ isSubmitting ? 'Signing in...' : 'Sign In' }}
     </Button>
