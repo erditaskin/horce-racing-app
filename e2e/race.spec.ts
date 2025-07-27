@@ -182,7 +182,7 @@ test.describe('Race Board E2E Tests', () => {
     
     // Check horse information display
     await expect(page.locator('[data-testid="horse-list"]')).toBeVisible()
-    await expect(page.locator('[data-testid="horse-item"]')).toHaveCount(10) // 10 horses per race
+    await expect(page.locator('[data-testid="horse-item"]')).toHaveCount(20) // 20 horses in pool
   })
 
   test('should show round progression', async ({ page }) => {
