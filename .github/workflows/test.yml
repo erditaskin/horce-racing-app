@@ -53,12 +53,6 @@ jobs:
     - name: Build application
       run: yarn build
       
-    - name: Start application
-      run: yarn preview &
-      
-    - name: Wait for application to start
-      run: sleep 10
-      
     - name: Run E2E tests
       run: yarn test:e2e
       
