@@ -35,6 +35,12 @@ test.describe('Race Board E2E Tests', () => {
     const pageContent = await page.content()
     console.log('Page contains "race-board":', pageContent.includes('race-board'))
     console.log('Page contains "data-testid":', pageContent.includes('data-testid'))
+    console.log('Page contains "login":', pageContent.includes('login'))
+    console.log('Page contains "auth":', pageContent.includes('auth'))
+    console.log('Page title:', await page.title())
+    
+    // Wait for race board to be visible
+    await expect(page.locator('[data-testid="race-board"]')).toBeVisible({ timeout: 10000 })
   })
 
   test('should load race board successfully', async ({ page }) => {
@@ -53,6 +59,14 @@ test.describe('Race Board E2E Tests', () => {
     // Wait for race day to be generated
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
     
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     // Verify race day elements are visible
     await expect(page.locator('[data-testid="race-program"]')).toBeVisible()
     await expect(page.locator('[data-testid="race-controls"]')).toBeVisible()
@@ -62,6 +76,14 @@ test.describe('Race Board E2E Tests', () => {
     // Generate race day first
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
     
     // Click start race button
     await page.click('[data-testid="start-race"]')
@@ -78,6 +100,15 @@ test.describe('Race Board E2E Tests', () => {
     // Generate and start race
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     await page.click('[data-testid="start-race"]')
     
     // Wait for race to start and quickly pause it before it finishes
@@ -92,6 +123,15 @@ test.describe('Race Board E2E Tests', () => {
     // Generate and start race
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     await page.click('[data-testid="start-race"]')
     
     // Wait for race to start
@@ -119,6 +159,15 @@ test.describe('Race Board E2E Tests', () => {
     // Generate and start race
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     await page.click('[data-testid="start-race"]')
     
     // Wait for race to start or complete, then reset
@@ -154,6 +203,15 @@ test.describe('Race Board E2E Tests', () => {
     // Generate and start race
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     await page.click('[data-testid="start-race"]')
     
     // Wait for race to complete (this might take some time)
@@ -169,6 +227,14 @@ test.describe('Race Board E2E Tests', () => {
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
     
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     // Select different race
     await page.click('[data-testid="race-2"]')
     
@@ -181,6 +247,14 @@ test.describe('Race Board E2E Tests', () => {
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
     
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     // Check pist status display
     await expect(page.locator('[data-testid="pist-status"]')).toBeVisible()
     await expect(page.locator('[data-testid="grass-pist"]')).toBeVisible()
@@ -191,6 +265,14 @@ test.describe('Race Board E2E Tests', () => {
     // Generate race day
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
     
     // Refresh page
     await page.reload()
@@ -205,6 +287,14 @@ test.describe('Race Board E2E Tests', () => {
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
     
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     // Check horse information display
     await expect(page.locator('[data-testid="horse-list"]')).toBeVisible()
     await expect(page.locator('[data-testid="horse-item"]')).toHaveCount(10) // 10 horses per race
@@ -214,16 +304,25 @@ test.describe('Race Board E2E Tests', () => {
     // Generate and start race
     await page.click('[data-testid="generate-race-day"]')
     await expect(page.locator('[data-testid="race-day-generated"]')).toBeVisible({ timeout: 10000 })
+    
+    // Handle the "Start Race" modal if it appears
+    const startModal = page.locator('text=Horses are at the starter\'s command')
+    const isModalVisible = await startModal.isVisible({ timeout: 3000 }).catch(() => false)
+    
+    if (isModalVisible) {
+      await page.click('button:has-text("Start Race")')
+    }
+    
     await page.click('[data-testid="start-race"]')
     
     // Wait for race to complete and results to be generated
     await expect(page.locator('[data-testid="race-results"]').first()).toBeVisible({ timeout: 60000 })
     
     // Now check for round progression elements
-    await expect(page.locator('[data-testid="round-progress"]')).toBeVisible({ timeout: 10000 })
+    await expect(page.locator('[data-testid="round-progress"]').first()).toBeVisible({ timeout: 10000 })
     
     // Verify round information is displayed
-    await expect(page.locator('[data-testid="current-round"]')).toBeVisible()
-    await expect(page.locator('[data-testid="round-distance"]')).toBeVisible()
+    await expect(page.locator('[data-testid="current-round"]').first()).toBeVisible()
+    await expect(page.locator('[data-testid="round-distance"]').first()).toBeVisible()
   })
 }) 
